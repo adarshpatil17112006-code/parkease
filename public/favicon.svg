@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="pinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+  </defs>
+  <!-- Location Pin Body -->
+  <path d="M24 3 C13.5 3 5 11.5 5 22 C5 33.2 21.2 44.5 22.9 45.7 C23.6 46.1 24.4 46.1 25.1 45.7 C26.8 44.5 43 33.2 43 22 C43 11.5 34.5 3 24 3 Z" fill="url(#pinGrad)" />
+  <!-- Dark Navy Inner Circle Accent -->
+  <circle cx="24" cy="20" r="14" fill="#0f172a" />
+  <!-- White Parking P -->
+  <path d="M20 12 L25 12 C27.5 12 29.5 13.5 29.5 16 C29.5 18.5 27.5 20 25 20 L22.5 20 L22.5 27.5 L20 27.5 Z M22.5 14.5 L22.5 17.5 L24.8 17.5 C25.8 17.5 26.8 16.9 26.8 16 C26.8 15.1 25.8 14.5 24.8 14.5 Z" fill="#ffffff" />
+</svg>
