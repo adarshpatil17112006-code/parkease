@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { initDb } from './config/db.js';
+import { initDb, getDb } from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import parkingRoutes from './routes/parkingRoutes.js';
 import bookingRoutes from './routes/bookingRoutes.js';
@@ -22,6 +22,18 @@ app.use('/api/parking', parkingRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/assistance', assistanceRoutes);
 
+// Promotions endpoint
+app.get('/api/promotions', async (_req, res) => {
+  try {
+    const db = await getDb();
+    const rows = await db.all('SELECT * FROM promotions');
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching promotions:', err);
+    res.status(500).json({ error: 'Failed to fetch promotions' });
+  }
+});
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({
@@ -40,6 +52,7 @@ app.get('/', (req, res) => {
       '/api/parking',
       '/api/bookings',
       '/api/assistance',
+      '/api/promotions',
       '/api/auth',
       '/api/health'
     ]
