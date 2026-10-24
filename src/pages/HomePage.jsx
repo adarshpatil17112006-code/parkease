@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Hero from '../components/Hero';
 import QuickSearch from '../components/QuickSearch';
 import ParkingListings from '../components/ParkingListings';
@@ -12,17 +12,29 @@ import ParkingDetailsModal from '../components/ParkingDetailsModal';
 import AssistanceModal from '../components/AssistanceModal';
 import Toast from '../components/Toast';
 import { parkingSpaces } from '../data/mockData';
+import { fetchParkingSpaces } from '../services/api';
 
 export default function HomePage({
   searchQuery,
   setSearchQuery,
   onOpenListParking
 }) {
+  const [parkingList, setParkingList] = useState(parkingSpaces);
   const [selectedBookingParking, setSelectedBookingParking] = useState(null);
   const [selectedDetailsParking, setSelectedDetailsParking] = useState(null);
   const [selectedAssistanceService, setSelectedAssistanceService] = useState(null);
   const [isAssistanceModalOpen, setIsAssistanceModalOpen] = useState(false);
   const [toast, setToast] = useState(null);
+
+  useEffect(() => {
+    async function loadSpaces() {
+      const spaces = await fetchParkingSpaces({ search: searchQuery });
+      if (spaces && spaces.length > 0) {
+        setParkingList(spaces);
+      }
+    }
+    loadSpaces();
+  }, [searchQuery]);
 
   const showToast = (title, message) => {
     setToast({ title, message });
@@ -78,7 +90,7 @@ export default function HomePage({
 
       {/* 4. Nearby Parking Spaces */}
       <ParkingListings
-        parkingData={parkingSpaces}
+        parkingData={parkingList}
         filterQuery={searchQuery}
         onBookNow={handleBookNow}
         onViewDetails={handleViewDetails}

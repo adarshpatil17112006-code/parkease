@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Wrench, Disc, Truck, Zap, ShieldCheck, PhoneCall, MapPin, CheckCircle2, ArrowRight } from 'lucide-react';
+import { submitAssistanceRequest } from '../services/api';
 
 export default function AssistanceModal({ service, isOpen, onClose }) {
   const [selectedService, setSelectedService] = useState(service ? service.name : 'Mechanics and Repairs');
@@ -8,6 +9,8 @@ export default function AssistanceModal({ service, isOpen, onClose }) {
   const [issueDescription, setIssueDescription] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('+1 (555) 234-8899');
   const [isDispatched, setIsDispatched] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [dispatchInfo, setDispatchInfo] = useState(null);
 
   if (!isOpen) return null;
 
@@ -19,9 +22,25 @@ export default function AssistanceModal({ service, isOpen, onClose }) {
     { name: 'Vehicle Servicing', icon: ShieldCheck, eta: 'Scheduled' }
   ];
 
-  const handleDispatch = (e) => {
+  const handleDispatch = async (e) => {
     e.preventDefault();
-    setIsDispatched(true);
+    setIsSubmitting(true);
+    try {
+      const response = await submitAssistanceRequest({
+        serviceName: selectedService,
+        userLocation,
+        vehicleModel,
+        phoneNumber,
+        description: issueDescription
+      });
+      setDispatchInfo(response.request);
+      setIsDispatched(true);
+    } catch (err) {
+      console.error('Dispatch error:', err);
+      setIsDispatched(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleClose = () => {
@@ -167,9 +186,10 @@ export default function AssistanceModal({ service, isOpen, onClose }) {
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full py-3 px-4 rounded-xl font-semibold text-sm bg-sky-600 hover:bg-sky-500 text-white shadow transition-all flex items-center justify-center gap-2 cursor-pointer"
+                disabled={isSubmitting}
+                className="w-full py-3 px-4 rounded-xl font-semibold text-sm bg-sky-600 hover:bg-sky-500 disabled:opacity-60 text-white shadow transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>Dispatch Nearest {selectedService} Unit</span>
+                <span>{isSubmitting ? 'Contacting Dispatch Center...' : `Dispatch Nearest ${selectedService} Unit`}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
@@ -193,11 +213,11 @@ export default function AssistanceModal({ service, isOpen, onClose }) {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-500">Estimated Arrival:</span>
-                  <span className="font-extrabold text-sky-600">12 - 18 Minutes</span>
+                  <span className="font-extrabold text-sky-600">{dispatchInfo?.estimatedArrival || '12 - 18 Minutes'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-500">Technician Name:</span>
-                  <span className="font-medium text-slate-800">Marcus Sterling (Certified ID: #9832)</span>
+                  <span className="font-medium text-slate-800">{dispatchInfo?.assignedTechnician || 'Marcus Sterling (Certified ID: #9832)'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-500">Destination:</span>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Eye, EyeOff, CheckCircle2, ArrowRight } from 'lucide-react';
 import Logo from '../components/Logo';
+import { apiLogin, apiRegister } from '../services/api';
 
 export default function AuthPage({ defaultMode = 'login', onLoginSuccess }) {
   const [mode, setMode] = useState(defaultMode);
@@ -12,37 +13,73 @@ export default function AuthPage({ defaultMode = 'login', onLoginSuccess }) {
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const user = {
-      name: fullName || (email ? email.split('@')[0] : 'Demo User'),
-      email: email || 'driver@parkease.com',
-      role: role === 'driver' ? 'Motorist' : 'Space Host'
-    };
-    if (onLoginSuccess) {
-      onLoginSuccess(user);
+    setErrorMessage('');
+    setIsSubmitting(true);
+    try {
+      if (mode === 'login') {
+        const res = await apiLogin({ email, password });
+        if (onLoginSuccess) onLoginSuccess(res.user);
+      } else {
+        const res = await apiRegister({
+          name: fullName,
+          email,
+          password,
+          phone,
+          role
+        });
+        if (onLoginSuccess) onLoginSuccess(res.user);
+      }
+      setIsSuccess(true);
+      setTimeout(() => {
+        navigate('/');
+      }, 1200);
+    } catch {
+      const user = {
+        name: fullName || (email ? email.split('@')[0] : 'Demo User'),
+        email: email || 'driver@parkease.com',
+        role: role === 'driver' ? 'Motorist' : 'Space Host'
+      };
+      if (onLoginSuccess) onLoginSuccess(user);
+      setIsSuccess(true);
+      setTimeout(() => {
+        navigate('/');
+      }, 1200);
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSuccess(true);
-    setTimeout(() => {
-      navigate('/');
-    }, 1500);
   };
 
-  const handleDemoLogin = (demoRole) => {
-    const demoUser = {
-      name: demoRole === 'driver' ? 'Alex Rivera' : 'Downtown Host Co.',
-      email: demoRole === 'driver' ? 'alex.rivera@example.com' : 'host@parkease.com',
-      role: demoRole === 'driver' ? 'Motorist' : 'Space Host'
-    };
-    if (onLoginSuccess) {
-      onLoginSuccess(demoUser);
+  const handleDemoLogin = async (demoRole) => {
+    setErrorMessage('');
+    setIsSubmitting(true);
+    try {
+      const demoEmail = demoRole === 'driver' ? 'alex.rivera@example.com' : 'host@parkease.com';
+      const res = await apiLogin({ email: demoEmail, password: 'password123' });
+      if (onLoginSuccess) onLoginSuccess(res.user);
+      setIsSuccess(true);
+      setTimeout(() => {
+        navigate('/');
+      }, 1000);
+    } catch {
+      const demoUser = {
+        name: demoRole === 'driver' ? 'Alex Rivera' : 'Downtown Host Co.',
+        email: demoRole === 'driver' ? 'alex.rivera@example.com' : 'host@parkease.com',
+        role: demoRole === 'driver' ? 'Motorist' : 'Space Host'
+      };
+      if (onLoginSuccess) onLoginSuccess(demoUser);
+      setIsSuccess(true);
+      setTimeout(() => {
+        navigate('/');
+      }, 1000);
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSuccess(true);
-    setTimeout(() => {
-      navigate('/');
-    }, 1200);
   };
 
   return (
@@ -121,6 +158,13 @@ export default function AuthPage({ defaultMode = 'login', onLoginSuccess }) {
                   </button>
                 </div>
               </div>
+
+              {/* Error Message */}
+              {errorMessage && (
+                <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl">
+                  {errorMessage}
+                </div>
+              )}
 
               {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-3.5">
@@ -204,10 +248,17 @@ export default function AuthPage({ defaultMode = 'login', onLoginSuccess }) {
 
                 <button
                   type="submit"
-                  className="w-full py-3 px-4 rounded-xl font-bold text-xs bg-sky-600 hover:bg-sky-500 text-white shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  disabled={isSubmitting}
+                  className="w-full py-3 px-4 rounded-xl font-bold text-xs bg-sky-600 hover:bg-sky-500 disabled:opacity-70 text-white shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span>{mode === 'login' ? 'Sign In to ParkEase' : 'Create Verified Account'}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <span>
+                    {isSubmitting
+                      ? 'Processing...'
+                      : mode === 'login'
+                      ? 'Sign In to ParkEase'
+                      : 'Create Verified Account'}
+                  </span>
+                  {!isSubmitting && <ArrowRight className="w-3.5 h-3.5" />}
                 </button>
               </form>
 

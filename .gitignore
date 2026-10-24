@@ -1,4 +1,8 @@
-# Logs
+# SQLite and environment
+*.db
+.env
+.env.*
+!*.example
 logs
 *.log
 npm-debug.log*

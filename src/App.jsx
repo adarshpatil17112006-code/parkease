@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -11,6 +11,7 @@ import AuthModal from './components/AuthModal';
 import ListParkingModal from './components/ListParkingModal';
 import AssistanceModal from './components/AssistanceModal';
 import Toast from './components/Toast';
+import { apiGetMe, apiLogout } from './services/api';
 
 function AppContent() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -20,6 +21,17 @@ function AppContent() {
   const [isListModalOpen, setIsListModalOpen] = useState(false);
   const [isAssistanceModalOpen, setIsAssistanceModalOpen] = useState(false);
   const [toast, setToast] = useState(null);
+
+  // Restore authenticated session on mount
+  useEffect(() => {
+    async function checkAuth() {
+      const user = await apiGetMe();
+      if (user) {
+        setCurrentUser(user);
+      }
+    }
+    checkAuth();
+  }, []);
 
   const showToast = (title, message) => {
     setToast({ title, message });
@@ -34,6 +46,7 @@ function AppContent() {
   };
 
   const handleSignOut = () => {
+    apiLogout();
     setCurrentUser(null);
     showToast('Signed Out', 'You have been signed out successfully.');
   };

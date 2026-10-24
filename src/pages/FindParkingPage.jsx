@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, MapPin, Star, Navigation, Zap } from 'lucide-react';
 import { parkingSpaces, locationsList } from '../data/mockData';
+import { fetchParkingSpaces } from '../services/api';
 import BookingModal from '../components/BookingModal';
 import ParkingDetailsModal from '../components/ParkingDetailsModal';
 
 export default function FindParkingPage() {
+  const [spacesList, setSpacesList] = useState(parkingSpaces);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('All Locations');
   const [selectedType, setSelectedType] = useState('All');
@@ -12,7 +14,17 @@ export default function FindParkingPage() {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [selectedDetails, setSelectedDetails] = useState(null);
 
-  const filteredListings = parkingSpaces
+  useEffect(() => {
+    async function load() {
+      const data = await fetchParkingSpaces();
+      if (data && data.length > 0) {
+        setSpacesList(data);
+      }
+    }
+    load();
+  }, []);
+
+  const filteredListings = spacesList
     .filter((spot) => {
       const query = searchTerm.toLowerCase();
       const matchesSearch =

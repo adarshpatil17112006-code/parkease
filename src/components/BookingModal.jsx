@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Calendar, Clock, MapPin, CheckCircle, QrCode, ArrowRight, Download } from 'lucide-react';
+import { submitBooking } from '../services/api';
 
 export default function BookingModal({ parking, isOpen, onClose, onBookingSuccess }) {
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
@@ -8,6 +9,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
   const [vehicleType, setVehicleType] = useState('Sedan / Hatchback');
   const [vehiclePlate, setVehiclePlate] = useState('');
   const [confirmedBooking, setConfirmedBooking] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isOpen || !parking) return null;
 
@@ -22,25 +24,30 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
   const bookingFee = 0.50;
   const grandTotal = (Number(totalCost) + bookingFee).toFixed(2);
 
-  const handleConfirm = (e) => {
+  const handleConfirm = async (e) => {
     e.preventDefault();
-    const reference = `PE-${Math.floor(100000 + Math.random() * 900000)}`;
-    const bayNumber = `Bay P-${Math.floor(1 + Math.random() * 18).toString().padStart(2, '0')}`;
-    const bookingDetails = {
-      reference,
-      parkingName: parking.name,
-      location: parking.location,
-      bayNumber,
-      date,
-      startTime,
-      duration: `${duration} hour(s)`,
-      vehicleType,
-      vehiclePlate: vehiclePlate || 'KA-05-EX-4921',
-      totalPaid: `$${grandTotal}`
-    };
-    setConfirmedBooking(bookingDetails);
-    if (onBookingSuccess) {
-      onBookingSuccess(bookingDetails);
+    setIsSubmitting(true);
+    try {
+      const response = await submitBooking({
+        parkingId: parking.id || parking.dbId,
+        parkingName: parking.name,
+        location: parking.location,
+        pricePerHour: parking.pricePerHour,
+        date,
+        startTime,
+        duration: Number(duration),
+        vehicleType,
+        vehiclePlate: vehiclePlate || 'KA-05-EX-4921'
+      });
+      const b = response.booking;
+      setConfirmedBooking(b);
+      if (onBookingSuccess) {
+        onBookingSuccess(b);
+      }
+    } catch (err) {
+      console.error('Booking submission error:', err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -207,9 +214,10 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full py-3 px-4 rounded-xl font-semibold text-sm bg-sky-600 hover:bg-sky-500 text-white shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+                disabled={isSubmitting}
+                className="w-full py-3 px-4 rounded-xl font-semibold text-sm bg-sky-600 hover:bg-sky-500 disabled:opacity-60 text-white shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>Confirm &amp; Generate Digital Pass</span>
+                <span>{isSubmitting ? 'Reserving Spot...' : 'Confirm & Generate Digital Pass'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
@@ -256,10 +264,18 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                   </div>
                 </div>
 
-                {/* Simulated QR Code */}
+                {/* Real Server-Generated QR Code */}
                 <div className="pt-2 flex items-center justify-center flex-col">
                   <div className="p-3 bg-white rounded-xl border border-slate-200 shadow-sm inline-block">
-                    <QrCode className="w-24 h-24 text-slate-900" />
+                    {confirmedBooking.qrCode ? (
+                      <img
+                        src={confirmedBooking.qrCode}
+                        alt={`Pass ${confirmedBooking.reference}`}
+                        className="w-24 h-24 object-contain"
+                      />
+                    ) : (
+                      <QrCode className="w-24 h-24 text-slate-900" />
+                    )}
                   </div>
                   <span className="text-[10px] text-slate-400 mt-1 font-mono">SCAN AT GATE BARRIER</span>
                 </div>

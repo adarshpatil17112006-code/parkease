@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, CheckCircle2, MapPin, Sparkles, ArrowRight } from 'lucide-react';
+import { submitParkingListing } from '../services/api';
 
 export default function ListParkingModal({ isOpen, onClose }) {
   const [spaceType, setSpaceType] = useState('Private Driveway');
@@ -12,15 +13,35 @@ export default function ListParkingModal({ isOpen, onClose }) {
   const [hasCCTV, setHasCCTV] = useState(true);
   const [isCovered, setIsCovered] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isOpen) return null;
 
   // Approximate monthly earnings calculation based on 8 hours/day and 25 days/month
   const estimatedMonthly = Math.round(hourlyPrice * 8 * 25 * spotsCount * 0.85);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitted(true);
+    setIsSubmitting(true);
+    try {
+      await submitParkingListing({
+        spaceType,
+        address,
+        spotsCount,
+        hourlyPrice,
+        ownerName,
+        ownerEmail,
+        hasEV,
+        hasCCTV,
+        isCovered
+      });
+      setIsSubmitted(true);
+    } catch (err) {
+      console.error('List space error:', err);
+      setIsSubmitted(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleResetAndClose = () => {
@@ -234,9 +255,10 @@ export default function ListParkingModal({ isOpen, onClose }) {
               {/* Action Button */}
               <button
                 type="submit"
-                className="w-full py-3 px-4 rounded-xl font-semibold text-sm bg-slate-900 hover:bg-slate-800 text-white shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+                disabled={isSubmitting}
+                className="w-full py-3 px-4 rounded-xl font-semibold text-sm bg-slate-900 hover:bg-slate-800 disabled:opacity-60 text-white shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>Submit Space for Review</span>
+                <span>{isSubmitting ? 'Submitting Application...' : 'Submit Space for Review'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>

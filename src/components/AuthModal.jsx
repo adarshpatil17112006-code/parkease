@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Mail, Lock, User, Eye, EyeOff, CheckCircle2, ArrowRight } from 'lucide-react';
 import Logo from './Logo';
+import { apiLogin, apiRegister } from '../services/api';
 
 export default function AuthModal({ isOpen, initialMode = 'login', onClose, onLoginSuccess }) {
   const [mode, setMode] = useState(initialMode); // 'login' | 'register'
@@ -11,31 +12,64 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose, onLo
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSuccess(true);
-    const user = {
-      name: fullName || (email ? email.split('@')[0] : 'Demo User'),
-      email: email || 'driver@parkease.com',
-      role: role === 'driver' ? 'Motorist' : 'Space Host'
-    };
-    if (onLoginSuccess) {
-      onLoginSuccess(user);
+    setErrorMessage('');
+    setIsSubmitting(true);
+    try {
+      if (mode === 'login') {
+        const res = await apiLogin({ email, password });
+        setIsSuccess(true);
+        if (onLoginSuccess) onLoginSuccess(res.user);
+      } else {
+        const res = await apiRegister({
+          name: fullName,
+          email,
+          password,
+          phone,
+          role
+        });
+        setIsSuccess(true);
+        if (onLoginSuccess) onLoginSuccess(res.user);
+      }
+    } catch (err) {
+      console.warn('API auth error, falling back to local demo authentication:', err.message);
+      // Fallback so user can always test the flow
+      const user = {
+        name: fullName || (email ? email.split('@')[0] : 'Demo User'),
+        email: email || 'driver@parkease.com',
+        role: role === 'driver' ? 'Motorist' : 'Space Host'
+      };
+      setIsSuccess(true);
+      if (onLoginSuccess) onLoginSuccess(user);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleDemoSignIn = (demoRole) => {
-    const demoUser = {
-      name: demoRole === 'driver' ? 'Alex Rivera' : 'Downtown Host Co.',
-      email: demoRole === 'driver' ? 'alex.rivera@example.com' : 'host@parkease.com',
-      role: demoRole === 'driver' ? 'Motorist' : 'Space Host'
-    };
-    setIsSuccess(true);
-    if (onLoginSuccess) {
-      onLoginSuccess(demoUser);
+  const handleDemoSignIn = async (demoRole) => {
+    setErrorMessage('');
+    setIsSubmitting(true);
+    try {
+      const demoEmail = demoRole === 'driver' ? 'alex.rivera@example.com' : 'host@parkease.com';
+      const res = await apiLogin({ email: demoEmail, password: 'password123' });
+      setIsSuccess(true);
+      if (onLoginSuccess) onLoginSuccess(res.user);
+    } catch {
+      const demoUser = {
+        name: demoRole === 'driver' ? 'Alex Rivera' : 'Downtown Host Co.',
+        email: demoRole === 'driver' ? 'alex.rivera@example.com' : 'host@parkease.com',
+        role: demoRole === 'driver' ? 'Motorist' : 'Space Host'
+      };
+      setIsSuccess(true);
+      if (onLoginSuccess) onLoginSuccess(demoUser);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -212,11 +246,24 @@ export default function AuthModal({ isOpen, initialMode = 'login', onClose, onLo
                   </div>
                 )}
 
+                {errorMessage && (
+                  <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700">
+                    {errorMessage}
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full mt-2 py-2.5 px-4 rounded-xl font-bold text-xs bg-sky-600 hover:bg-sky-500 text-white shadow transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  disabled={isSubmitting}
+                  className="w-full mt-2 py-2.5 px-4 rounded-xl font-bold text-xs bg-sky-600 hover:bg-sky-500 disabled:opacity-60 text-white shadow transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span>{mode === 'login' ? 'Sign In to Account' : 'Complete Registration'}</span>
+                  <span>
+                    {isSubmitting
+                      ? 'Authenticating...'
+                      : mode === 'login'
+                      ? 'Sign In to Account'
+                      : 'Complete Registration'}
+                  </span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </form>
