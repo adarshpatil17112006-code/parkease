@@ -39,28 +39,46 @@ export async function getAllParkingSpaces(req, res) {
 
     const rows = await db.all(query, ...params);
 
+    const defaultCoords = {
+      1: { lat: 12.9752, lng: 77.5985 },
+      2: { lat: 12.9785, lng: 77.6030 },
+      3: { lat: 12.9695, lng: 77.6105 },
+      4: { lat: 12.9658, lng: 77.5942 },
+      5: { lat: 12.9825, lng: 77.6152 },
+      6: { lat: 12.9620, lng: 77.6055 }
+    };
+
     // Format boolean columns for frontend convenience
-    const spaces = rows.map((r) => ({
-      id: `park-${r.id}`,
-      dbId: r.id,
-      name: r.name,
-      location: r.location,
-      area: r.area,
-      pricePerHour: r.price_per_hour,
-      availableSpaces: r.available_spaces,
-      totalSpaces: r.total_spaces,
-      distance: r.distance || 'Nearby',
-      openingHours: r.opening_hours || '24/7 Access',
-      rating: r.rating,
-      reviewsCount: r.reviews_count,
-      type: r.type,
-      isCovered: Boolean(r.is_covered),
-      hasEV: Boolean(r.has_ev),
-      hasCCTV: Boolean(r.has_cctv),
-      hasDisabledAccess: Boolean(r.has_disabled_access),
-      image: r.image || 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=800&q=80',
-      description: r.description
-    }));
+    const spaces = rows.map((r) => {
+      const coord = defaultCoords[r.id] || {
+        lat: 12.9716 + (((r.id * 17) % 25) - 12) * 0.0015,
+        lng: 77.5946 + (((r.id * 23) % 25) - 12) * 0.0018
+      };
+
+      return {
+        id: `park-${r.id}`,
+        dbId: r.id,
+        name: r.name,
+        location: r.location,
+        area: r.area,
+        pricePerHour: r.price_per_hour,
+        availableSpaces: r.available_spaces,
+        totalSpaces: r.total_spaces,
+        distance: r.distance || 'Nearby',
+        openingHours: r.opening_hours || '24/7 Access',
+        rating: r.rating,
+        reviewsCount: r.reviews_count,
+        type: r.type,
+        isCovered: Boolean(r.is_covered),
+        hasEV: Boolean(r.has_ev),
+        hasCCTV: Boolean(r.has_cctv),
+        hasDisabledAccess: Boolean(r.has_disabled_access),
+        latitude: r.latitude || coord.lat,
+        longitude: r.longitude || coord.lng,
+        image: r.image || 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=800&q=80',
+        description: r.description
+      };
+    });
 
     res.json({ count: spaces.length, spaces });
   } catch (error) {

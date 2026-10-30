@@ -7,6 +7,7 @@ import FindParkingPage from './pages/FindParkingPage';
 import AssistancePage from './pages/AssistancePage';
 import HostPage from './pages/HostPage';
 import AuthPage from './pages/AuthPage';
+import MyBookingsPage from './pages/MyBookingsPage';
 import AuthModal from './components/AuthModal';
 import ListParkingModal from './components/ListParkingModal';
 import AssistanceModal from './components/AssistanceModal';
@@ -81,6 +82,7 @@ function AppContent() {
             }
           />
           <Route path="/find-parking" element={<FindParkingPage />} />
+          <Route path="/my-bookings" element={<MyBookingsPage onOpenAuth={handleOpenAuth} currentUser={currentUser} />} />
           <Route path="/vehicle-assistance" element={<AssistancePage />} />
           <Route path="/list-parking" element={<HostPage onOpenAuth={handleOpenAuth} />} />
           <Route path="/host" element={<HostPage onOpenAuth={handleOpenAuth} />} />

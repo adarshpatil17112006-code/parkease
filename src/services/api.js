@@ -97,27 +97,100 @@ export async function submitBooking(bookingPayload) {
       const errorData = await res.json();
       throw new Error(errorData.error || 'Booking creation failed');
     }
-    return await res.json();
+    const data = await res.json();
+    if (data.booking) {
+      saveLocalBooking(data.booking);
+    }
+    return data;
   } catch (err) {
     console.warn('API error, generating simulated reservation pass:', err.message);
     const ref = `PE-${Math.floor(100000 + Math.random() * 900000)}`;
     const bay = `Bay P-${Math.floor(1 + Math.random() * 18).toString().padStart(2, '0')}`;
+    const simBooking = {
+      reference: ref,
+      parkingName: bookingPayload.parkingName || 'Downtown Facility',
+      location: bookingPayload.location || 'Metro Center',
+      bayNumber: bay,
+      date: bookingPayload.date,
+      startTime: bookingPayload.startTime,
+      duration: `${bookingPayload.duration || 2} hour(s)`,
+      vehicleType: bookingPayload.vehicleType,
+      vehiclePlate: bookingPayload.vehiclePlate || 'KA-05-EX-4921',
+      totalPaid: `$${((bookingPayload.pricePerHour || 4.5) * (bookingPayload.duration || 2) + 0.5).toFixed(2)}`,
+      paymentMethod: bookingPayload.paymentMethod || 'UPI / QR',
+      status: 'confirmed'
+    };
+    saveLocalBooking(simBooking);
     return {
       message: 'Booking confirmed (local simulation)',
-      booking: {
-        reference: ref,
-        parkingName: bookingPayload.parkingName || 'Downtown Facility',
-        location: bookingPayload.location || 'Metro Center',
-        bayNumber: bay,
-        date: bookingPayload.date,
-        startTime: bookingPayload.startTime,
-        duration: `${bookingPayload.duration || 2} hour(s)`,
-        vehicleType: bookingPayload.vehicleType,
-        vehiclePlate: bookingPayload.vehiclePlate || 'KA-05-EX-4921',
-        totalPaid: `$${((bookingPayload.pricePerHour || 4.5) * (bookingPayload.duration || 2) + 0.5).toFixed(2)}`,
-        status: 'confirmed'
-      }
+      booking: simBooking
     };
+  }
+}
+
+function saveLocalBooking(booking) {
+  try {
+    const existing = JSON.parse(localStorage.getItem('parkease_local_bookings') || '[]');
+    const updated = [booking, ...existing.filter((b) => b.reference !== booking.reference)];
+    localStorage.setItem('parkease_local_bookings', JSON.stringify(updated));
+  } catch {
+    // Ignore storage quota errors
+  }
+}
+
+export async function fetchMyBookings() {
+  try {
+    const token = localStorage.getItem('parkease_token');
+    let serverBookings = [];
+    if (token) {
+      const res = await fetch(`${API_BASE}/bookings/my-bookings`, {
+        headers: getAuthHeaders()
+      });
+      if (res.ok) {
+        const data = await res.json();
+        serverBookings = data.bookings || [];
+      }
+    }
+
+    const localBookings = JSON.parse(localStorage.getItem('parkease_local_bookings') || '[]');
+    
+    // Merge server and local bookings without duplicates
+    const combined = [...serverBookings];
+    localBookings.forEach((lb) => {
+      if (!combined.some((sb) => sb.reference === lb.reference)) {
+        combined.push(lb);
+      }
+    });
+
+    return combined;
+  } catch (err) {
+    console.warn('Error fetching server bookings, using local history:', err.message);
+    return JSON.parse(localStorage.getItem('parkease_local_bookings') || '[]');
+  }
+}
+
+export async function cancelBooking(bookingIdOrRef) {
+  try {
+    const res = await fetch(`${API_BASE}/bookings/${bookingIdOrRef}/cancel`, {
+      method: 'PUT',
+      headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error('Failed to cancel on server');
+    
+    // Also update local storage status
+    const local = JSON.parse(localStorage.getItem('parkease_local_bookings') || '[]');
+    const updated = local.map((b) =>
+      b.id === bookingIdOrRef || b.reference === bookingIdOrRef ? { ...b, status: 'cancelled' } : b
+    );
+    localStorage.setItem('parkease_local_bookings', JSON.stringify(updated));
+    return await res.json();
+  } catch {
+    const local = JSON.parse(localStorage.getItem('parkease_local_bookings') || '[]');
+    const updated = local.map((b) =>
+      b.id === bookingIdOrRef || b.reference === bookingIdOrRef ? { ...b, status: 'cancelled' } : b
+    );
+    localStorage.setItem('parkease_local_bookings', JSON.stringify(updated));
+    return { message: 'Booking cancelled' };
   }
 }
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, PlusCircle, User, LogOut } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Menu, X, PlusCircle, User, LogOut, Ticket } from 'lucide-react';
 import Logo from './Logo';
 
 export default function Navbar({ onOpenAuth, onOpenListParking, currentUser, onSignOut }) {
@@ -76,6 +77,15 @@ export default function Navbar({ onOpenAuth, onOpenListParking, currentUser, onS
 
           {/* Right Action Buttons */}
           <div className="hidden md:flex items-center gap-3">
+            {/* My Bookings CTA */}
+            <Link
+              to="/my-bookings"
+              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 rounded-xl transition-all border border-sky-200/80 cursor-pointer"
+            >
+              <Ticket className="w-3.5 h-3.5 text-sky-600" />
+              <span>My Bookings</span>
+            </Link>
+
             {/* List Your Parking CTA */}
             <button
               onClick={onOpenListParking}
@@ -161,6 +171,15 @@ export default function Navbar({ onOpenAuth, onOpenListParking, currentUser, onS
           </div>
 
           <div className="mt-4 pt-4 border-t border-slate-100 flex flex-col gap-2.5">
+            <Link
+              to="/my-bookings"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-xs bg-sky-50 text-sky-700 border border-sky-200"
+            >
+              <Ticket className="w-4 h-4 text-sky-600" />
+              <span>My Passes &amp; Reservations</span>
+            </Link>
+
             <button
               onClick={() => {
                 setMobileMenuOpen(false);

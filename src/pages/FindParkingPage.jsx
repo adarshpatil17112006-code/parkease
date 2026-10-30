@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Star, Navigation, Zap } from 'lucide-react';
+import { Search, MapPin, Star, Navigation, Zap, LayoutGrid, Map as MapIcon, Columns2 } from 'lucide-react';
 import { parkingSpaces, locationsList } from '../data/mockData';
 import { fetchParkingSpaces } from '../services/api';
 import BookingModal from '../components/BookingModal';
 import ParkingDetailsModal from '../components/ParkingDetailsModal';
+import ParkingMap from '../components/ParkingMap';
 
 export default function FindParkingPage() {
   const [spacesList, setSpacesList] = useState(parkingSpaces);
@@ -11,6 +12,8 @@ export default function FindParkingPage() {
   const [selectedLocation, setSelectedLocation] = useState('All Locations');
   const [selectedType, setSelectedType] = useState('All');
   const [sortBy, setSortBy] = useState('distance'); // 'distance' | 'price' | 'rating'
+  const [viewMode, setViewMode] = useState('split'); // 'grid' | 'map' | 'split'
+  const [selectedSpotId, setSelectedSpotId] = useState(null);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [selectedDetails, setSelectedDetails] = useState(null);
 
@@ -59,16 +62,55 @@ export default function FindParkingPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
-        <div className="mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-bold mb-2">
-            <span>Explore Parking Network</span>
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-bold mb-2">
+              <span>Explore Parking Network</span>
+            </div>
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight">
+              Find &amp; Reserve Parking
+            </h1>
+            <p className="text-slate-600 text-sm mt-1">
+              Compare rates, distance, and real-time amenities across verified parking spaces with live map tracking.
+            </p>
           </div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">
-            Find &amp; Reserve Parking
-          </h1>
-          <p className="text-slate-600 text-sm mt-1">
-            Compare rates, distance, and real-time amenities across verified parking spaces. (Sample availability data)
-          </p>
+
+          {/* View Mode Toggle Buttons */}
+          <div className="inline-flex items-center bg-white p-1 rounded-2xl border border-slate-200 shadow-xs self-start md:self-auto">
+            <button
+              onClick={() => setViewMode('split')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                viewMode === 'split'
+                  ? 'bg-sky-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+            >
+              <Columns2 className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Split View</span>
+            </button>
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                viewMode === 'grid'
+                  ? 'bg-sky-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Grid Only</span>
+            </button>
+            <button
+              onClick={() => setViewMode('map')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                viewMode === 'map'
+                  ? 'bg-sky-600 text-white shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+            >
+              <MapIcon className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Map Only</span>
+            </button>
+          </div>
         </div>
 
         {/* Filter Bar */}
@@ -137,86 +179,183 @@ export default function FindParkingPage() {
           </div>
         </div>
 
-        {/* Listings Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredListings.map((spot) => (
-            <div
-              key={spot.id}
-              className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-xl hover:border-sky-300 transition-all flex flex-col justify-between"
-            >
-              <div>
-                <div className="relative h-48 w-full">
-                  <img src={spot.image} alt={spot.name} className="w-full h-full object-cover" />
-                  <div className="absolute top-3 left-3 flex gap-1.5">
-                    <span className="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-white/95 text-slate-800">
+        {/* Render View Modes */}
+        {viewMode === 'map' && (
+          <div className="h-[620px] w-full rounded-3xl overflow-hidden shadow-sm">
+            <ParkingMap
+              spaces={filteredListings}
+              selectedSpotId={selectedSpotId}
+              onSelectSpot={(spot) => setSelectedSpotId(spot.id)}
+              onBookSpot={(spot) => setSelectedBooking(spot)}
+            />
+          </div>
+        )}
+
+        {viewMode === 'split' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* Left: Scrollable Cards (5 cols) */}
+            <div className="lg:col-span-6 space-y-4 max-h-[720px] overflow-y-auto pr-1">
+              {filteredListings.map((spot) => (
+                <div
+                  key={spot.id}
+                  onMouseEnter={() => setSelectedSpotId(spot.id)}
+                  onClick={() => setSelectedSpotId(spot.id)}
+                  className={`bg-white rounded-3xl border transition-all p-4 flex flex-col sm:flex-row gap-4 cursor-pointer ${
+                    selectedSpotId === spot.id
+                      ? 'border-sky-500 ring-2 ring-sky-400/20 shadow-md'
+                      : 'border-slate-200 hover:border-slate-300 hover:shadow-sm'
+                  }`}
+                >
+                  <div className="sm:w-36 h-32 rounded-2xl overflow-hidden relative shrink-0">
+                    <img src={spot.image} alt={spot.name} className="w-full h-full object-cover" />
+                    <span className="absolute top-2 left-2 px-2 py-0.5 rounded text-[9px] font-bold bg-white/95 text-slate-800">
                       {spot.type}
                     </span>
-                    {spot.hasEV && (
-                      <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-500 text-white flex items-center gap-1">
-                        <Zap className="w-3 h-3" /> EV Ready
-                      </span>
-                    )}
                   </div>
-                  <div className="absolute top-3 right-3">
-                    <span className="px-2 py-0.5 rounded text-[10px] bg-slate-900/70 text-slate-200">
-                      Sample Data
-                    </span>
-                  </div>
-                </div>
 
-                <div className="p-5 space-y-3">
-                  <div className="flex items-center justify-between text-xs text-slate-500">
-                    <div className="flex items-center gap-1 text-amber-500 font-bold">
-                      <Star className="w-3.5 h-3.5 fill-amber-400" />
-                      <span>{spot.rating}</span>
-                      <span className="text-slate-400 font-normal">({spot.reviewsCount})</span>
+                  <div className="flex-1 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between text-[11px] text-slate-500 mb-1">
+                        <span className="flex items-center gap-1 text-amber-500 font-bold">
+                          <Star className="w-3 h-3 fill-amber-400" /> {spot.rating}
+                        </span>
+                        <span className="flex items-center gap-1 text-slate-400">
+                          <Navigation className="w-3 h-3 text-sky-500" /> {spot.distance}
+                        </span>
+                      </div>
+                      <h4 className="text-sm font-bold text-slate-900 leading-snug">{spot.name}</h4>
+                      <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5 truncate">
+                        <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+                        <span>{spot.location}</span>
+                      </p>
                     </div>
-                    <span className="flex items-center gap-1 text-slate-500">
-                      <Navigation className="w-3 h-3 text-sky-500" />
-                      {spot.distance}
-                    </span>
-                  </div>
 
-                  <h3 className="text-base font-bold text-slate-900">{spot.name}</h3>
-                  <p className="text-xs text-slate-500 flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                    <span>{spot.location}</span>
-                  </p>
+                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between mt-2">
+                      <div>
+                        <span className="text-sm font-extrabold text-slate-900">${spot.pricePerHour.toFixed(2)}</span>
+                        <span className="text-[10px] text-slate-400"> / hr</span>
+                      </div>
 
-                  <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-100">
-                    <span className="text-emerald-700 font-semibold">{spot.availableSpaces} spots available</span>
-                    <span className="text-slate-500 font-medium">{spot.openingHours}</span>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedDetails(spot);
+                          }}
+                          className="px-2.5 py-1.5 rounded-lg border border-slate-200 text-[11px] font-semibold text-slate-700 hover:bg-slate-50"
+                        >
+                          Details
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedBooking(spot);
+                          }}
+                          className="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-[11px] font-bold shadow-xs"
+                        >
+                          Book Spot
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="p-5 pt-0 border-t border-slate-100 mt-2">
-                <div className="flex items-baseline justify-between mb-3 pt-3">
-                  <span className="text-xs text-slate-500">Rate</span>
-                  <div>
-                    <span className="text-lg font-extrabold text-slate-900">${spot.pricePerHour.toFixed(2)}</span>
-                    <span className="text-xs text-slate-500"> / hr</span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    onClick={() => setSelectedDetails(spot)}
-                    className="py-2.5 px-3 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50"
-                  >
-                    View Details
-                  </button>
-                  <button
-                    onClick={() => setSelectedBooking(spot)}
-                    className="py-2.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold shadow-xs"
-                  >
-                    Book Now
-                  </button>
-                </div>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
+
+            {/* Right: Sticky Interactive Map (6 cols) */}
+            <div className="lg:col-span-6 lg:sticky lg:top-24 h-[550px] lg:h-[720px]">
+              <ParkingMap
+                spaces={filteredListings}
+                selectedSpotId={selectedSpotId}
+                onSelectSpot={(spot) => setSelectedSpotId(spot.id)}
+                onBookSpot={(spot) => setSelectedBooking(spot)}
+              />
+            </div>
+          </div>
+        )}
+
+        {viewMode === 'grid' && (
+          /* Listings Grid */
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredListings.map((spot) => (
+              <div
+                key={spot.id}
+                className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-xl hover:border-sky-300 transition-all flex flex-col justify-between"
+              >
+                <div>
+                  <div className="relative h-48 w-full">
+                    <img src={spot.image} alt={spot.name} className="w-full h-full object-cover" />
+                    <div className="absolute top-3 left-3 flex gap-1.5">
+                      <span className="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-white/95 text-slate-800">
+                        {spot.type}
+                      </span>
+                      {spot.hasEV && (
+                        <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-500 text-white flex items-center gap-1">
+                          <Zap className="w-3 h-3" /> EV Ready
+                        </span>
+                      )}
+                    </div>
+                    <div className="absolute top-3 right-3">
+                      <span className="px-2 py-0.5 rounded text-[10px] bg-slate-900/70 text-slate-200">
+                        Sample Data
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="p-5 space-y-3">
+                    <div className="flex items-center justify-between text-xs text-slate-500">
+                      <div className="flex items-center gap-1 text-amber-500 font-bold">
+                        <Star className="w-3.5 h-3.5 fill-amber-400" />
+                        <span>{spot.rating}</span>
+                        <span className="text-slate-400 font-normal">({spot.reviewsCount})</span>
+                      </div>
+                      <span className="flex items-center gap-1 text-slate-500">
+                        <Navigation className="w-3 h-3 text-sky-500" />
+                        {spot.distance}
+                      </span>
+                    </div>
+
+                    <h3 className="text-base font-bold text-slate-900">{spot.name}</h3>
+                    <p className="text-xs text-slate-500 flex items-center gap-1">
+                      <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                      <span>{spot.location}</span>
+                    </p>
+
+                    <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-100">
+                      <span className="text-emerald-700 font-semibold">{spot.availableSpaces} spots available</span>
+                      <span className="text-slate-500 font-medium">{spot.openingHours}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-5 pt-0 border-t border-slate-100 mt-2">
+                  <div className="flex items-baseline justify-between mb-3 pt-3">
+                    <span className="text-xs text-slate-500">Rate</span>
+                    <div>
+                      <span className="text-lg font-extrabold text-slate-900">${spot.pricePerHour.toFixed(2)}</span>
+                      <span className="text-xs text-slate-500"> / hr</span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => setSelectedDetails(spot)}
+                      className="py-2.5 px-3 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                    >
+                      View Details
+                    </button>
+                    <button
+                      onClick={() => setSelectedBooking(spot)}
+                      className="py-2.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold shadow-xs"
+                    >
+                      Book Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
       </div>
 

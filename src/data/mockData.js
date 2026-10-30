@@ -16,6 +16,8 @@ export const parkingSpaces = [
     hasEV: true,
     hasCCTV: true,
     hasDisabledAccess: true,
+    latitude: 12.9752,
+    longitude: 77.5985,
     image: 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=800&q=80',
     description: 'Multi-level secure parking complex with direct pedestrian access to downtown shopping and transit hub.'
   },
@@ -36,6 +38,8 @@ export const parkingSpaces = [
     hasEV: false,
     hasCCTV: true,
     hasDisabledAccess: true,
+    latitude: 12.9785,
+    longitude: 77.6030,
     image: 'https://images.unsplash.com/photo-1590674899484-d5640e854abe?auto=format&fit=crop&w=800&q=80',
     description: 'Direct underground connection to high-speed rail and subway. Height limit 2.1m. Monitored 24/7.'
   },
@@ -56,6 +60,8 @@ export const parkingSpaces = [
     hasEV: true,
     hasCCTV: true,
     hasDisabledAccess: true,
+    latitude: 12.9695,
+    longitude: 77.6105,
     image: 'https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?auto=format&fit=crop&w=800&q=80',
     description: 'Spacious outdoor parking adjacent to waterfront dining and scenic ferry terminals. Wide bays for SUVs.'
   },
@@ -76,6 +82,8 @@ export const parkingSpaces = [
     hasEV: true,
     hasCCTV: true,
     hasDisabledAccess: true,
+    latitude: 12.9658,
+    longitude: 77.5942,
     image: 'https://images.unsplash.com/photo-1621929747188-0b4dc28498d2?auto=format&fit=crop&w=800&q=80',
     description: 'Premium corporate parking facility with valet check-in, license plate recognition, and detail bay.'
   },
@@ -96,6 +104,8 @@ export const parkingSpaces = [
     hasEV: true,
     hasCCTV: true,
     hasDisabledAccess: true,
+    latitude: 12.9825,
+    longitude: 77.6152,
     image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80',
     description: 'Eco-friendly solar-powered facility with 16 rapid Level-3 DC EV chargers and app-guided bay lighting.'
   },
@@ -116,6 +126,8 @@ export const parkingSpaces = [
     hasEV: false,
     hasCCTV: true,
     hasDisabledAccess: true,
+    latitude: 12.9620,
+    longitude: 77.6055,
     image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=800&q=80',
     description: 'Gated, illuminated perimeter lot within walking distance of galleries, theatres, and concert halls.'
   }
