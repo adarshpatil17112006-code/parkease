@@ -51,7 +51,7 @@ export default function ParkingDetailsModal({ parking, isOpen, onClose, onBookNo
           <div className="grid grid-cols-3 gap-3 p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 text-center">
             <div>
               <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Rate</span>
-              <span className="text-base font-extrabold text-slate-900">${parking.pricePerHour.toFixed(2)}/hr</span>
+              <span className="text-base font-extrabold text-slate-900">₹{parking.pricePerHour.toFixed(2)}/hr</span>
             </div>
             <div className="border-x border-slate-200">
               <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Available</span>

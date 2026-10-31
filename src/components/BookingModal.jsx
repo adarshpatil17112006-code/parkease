@@ -42,7 +42,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
   ];
 
   const totalCost = (parking.pricePerHour * Number(duration)).toFixed(2);
-  const bookingFee = 0.50;
+  const bookingFee = 10.00;
   const grandTotal = (Number(totalCost) + bookingFee).toFixed(2);
 
   const handleProceedToPayment = (e) => {
@@ -149,7 +149,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                   <div className="font-semibold text-slate-900">{parking.name}</div>
                   <div className="text-slate-500 mt-0.5">{parking.location}</div>
                   <div className="mt-1 flex items-center gap-3 text-slate-600">
-                    <span className="font-medium text-sky-700">${parking.pricePerHour.toFixed(2)}/hour</span>
+                    <span className="font-medium text-sky-700">₹{parking.pricePerHour.toFixed(2)}/hour</span>
                     <span>•</span>
                     <span className="text-emerald-700 font-medium">{parking.availableSpaces} spots available</span>
                   </div>
@@ -246,16 +246,16 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
               {/* Price Calculation Summary */}
               <div className="border-t border-dashed border-slate-200 pt-3 space-y-1.5 text-xs">
                 <div className="flex justify-between text-slate-600">
-                  <span>Parking rate ({duration}h × ${parking.pricePerHour.toFixed(2)})</span>
-                  <span className="font-semibold text-slate-800">${totalCost}</span>
+                  <span>Parking rate ({duration}h × ₹{parking.pricePerHour.toFixed(2)})</span>
+                  <span className="font-semibold text-slate-800">₹{totalCost}</span>
                 </div>
                 <div className="flex justify-between text-slate-600">
                   <span>Platform service fee</span>
-                  <span className="font-semibold text-slate-800">${bookingFee.toFixed(2)}</span>
+                  <span className="font-semibold text-slate-800">₹{bookingFee.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm font-bold text-slate-900 pt-2 border-t border-slate-100">
                   <span>Estimated Total</span>
-                  <span className="text-sky-600">${grandTotal}</span>
+                  <span className="text-sky-600">₹{grandTotal}</span>
                 </div>
               </div>
 
@@ -264,7 +264,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                 type="submit"
                 className="w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm bg-sky-600 hover:bg-sky-500 text-white shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>Proceed to Payment (${grandTotal})</span>
+                <span>Proceed to Payment (₹{grandTotal})</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
@@ -277,7 +277,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                 <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
                   Select Payment Method
                 </span>
-                <span className="text-xs font-extrabold text-sky-600">Total: ${grandTotal}</span>
+                <span className="text-xs font-extrabold text-sky-600">Total: ₹{grandTotal}</span>
               </div>
 
               {/* Payment Methods Grid */}
@@ -419,7 +419,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                   disabled={isSubmitting}
                   className="py-3 px-4 rounded-xl font-bold text-xs bg-sky-600 hover:bg-sky-500 disabled:opacity-60 text-white shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span>{isSubmitting ? 'Verifying...' : `Pay $${grandTotal}`}</span>
+                  <span>{isSubmitting ? 'Verifying...' : `Pay ₹${grandTotal}`}</span>
                   <CheckCircle className="w-4 h-4" />
                 </button>
               </div>

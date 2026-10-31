@@ -164,7 +164,7 @@ export default function ParkingListings({ parkingData, filterQuery, onBookNow, o
                     <div className="flex items-baseline justify-between">
                       <span className="text-xs text-slate-500">Hourly Rate</span>
                       <div className="text-right">
-                        <span className="text-lg font-extrabold text-slate-900">${spot.pricePerHour.toFixed(2)}</span>
+                        <span className="text-lg font-extrabold text-slate-900">₹{spot.pricePerHour.toFixed(2)}</span>
                         <span className="text-xs text-slate-500 font-medium"> / hr</span>
                       </div>
                     </div>

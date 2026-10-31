@@ -84,7 +84,7 @@ export default function OwnerBanner({ onOpenListParking }) {
                   <span className="text-xs font-bold text-slate-300">Host Dashboard Simulation</span>
                 </div>
                 <span className="text-[11px] text-emerald-400 font-bold bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-800">
-                  + $520 Earned This Month
+                  + ₹18,500 Earned This Month
                 </span>
               </div>
 
@@ -106,7 +106,7 @@ export default function OwnerBanner({ onOpenListParking }) {
                     <rect x="46" y="110" width="48" height="15" rx="3" fill="#bae6fd" opacity="0.8" />
                     
                     <rect x="25" y="145" width="90" height="18" rx="4" fill="#0f172a" opacity="0.9" />
-                    <text x="70" y="157" fill="#38bdf8" fontSize="9" fontWeight="bold" textAnchor="middle">OCCUPIED ($4/hr)</text>
+                    <text x="70" y="157" fill="#38bdf8" fontSize="9" fontWeight="bold" textAnchor="middle">OCCUPIED (₹40/hr)</text>
                   </g>
 
                   <g transform="translate(220, 40)">

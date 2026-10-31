@@ -117,7 +117,7 @@ export default function HeroIllustration() {
               <text x="50" y="24" fill="#94a3b8" fontSize="11" fontWeight="bold" textAnchor="middle">BAY P-04</text>
               <circle cx="50" cy="70" r="14" fill="#1e40af" fillOpacity="0.4" stroke="#60a5fa" strokeWidth="1" />
               <text x="50" y="74" fill="#93c5fd" fontSize="12" fontWeight="bold" textAnchor="middle">P</text>
-              <text x="50" y="104" fill="#93c5fd" fontSize="9" textAnchor="middle">$4.50 / hr</text>
+              <text x="50" y="104" fill="#93c5fd" fontSize="9" textAnchor="middle">₹40 / hr</text>
             </g>
 
             {/* BOTTOM ROW PARKING BAYS */}

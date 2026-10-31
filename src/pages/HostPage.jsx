@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { DollarSign, ShieldCheck, Calendar, Sparkles, ArrowRight } from 'lucide-react';
+import { IndianRupee, ShieldCheck, Calendar, Sparkles, ArrowRight } from 'lucide-react';
 import ListParkingModal from '../components/ListParkingModal';
 
 export default function HostPage({ onOpenAuth }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [calculatorSpots, setCalculatorSpots] = useState(1);
-  const [calculatorRate, setCalculatorRate] = useState(4.5);
+  const [calculatorRate, setCalculatorRate] = useState(40);
 
   const estimatedMonthly = Math.round(calculatorSpots * calculatorRate * 8 * 25 * 0.85);
 
@@ -74,13 +74,13 @@ export default function HostPage({ onOpenAuth }) {
               <div>
                 <div className="flex justify-between text-xs text-slate-300 mb-1">
                   <span>Hourly Rate:</span>
-                  <span className="font-bold text-white">${calculatorRate.toFixed(2)} / hour</span>
+                  <span className="font-bold text-white">₹{calculatorRate} / hour</span>
                 </div>
                 <input
                   type="range"
-                  min="2"
-                  max="15"
-                  step="0.5"
+                  min="20"
+                  max="150"
+                  step="5"
                   value={calculatorRate}
                   onChange={(e) => setCalculatorRate(Number(e.target.value))}
                   className="w-full accent-sky-400 cursor-pointer"
@@ -90,7 +90,7 @@ export default function HostPage({ onOpenAuth }) {
               <div className="p-4 rounded-2xl bg-slate-900 border border-slate-700/80 text-center">
                 <span className="text-xs text-slate-400 uppercase tracking-wider">Projected Monthly Earnings</span>
                 <div className="text-3xl font-black text-sky-400 mt-1">
-                  ${estimatedMonthly} <span className="text-xs text-slate-400 font-normal">/ month</span>
+                  ₹{estimatedMonthly.toLocaleString('en-IN')} <span className="text-xs text-slate-400 font-normal">/ month</span>
                 </div>
                 <p className="text-[11px] text-slate-500 mt-1">Estimated at ~8 hrs utilization per business day</p>
               </div>
@@ -111,7 +111,7 @@ export default function HostPage({ onOpenAuth }) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="bg-white p-6 rounded-3xl border border-slate-200">
             <div className="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center mb-4">
-              <DollarSign className="w-6 h-6" />
+              <IndianRupee className="w-6 h-6" />
             </div>
             <h3 className="text-base font-bold text-slate-900 mb-2">Automated Payouts</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
@@ -125,7 +125,7 @@ export default function HostPage({ onOpenAuth }) {
             </div>
             <h3 className="text-base font-bold text-slate-900 mb-2">ParkEase Host Guarantee</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Every driver is identity-verified with active vehicle registration and $1,000,000 property damage coverage.
+              Every driver is identity-verified with active vehicle registration and ₹50,00,000 comprehensive property damage coverage.
             </p>
           </div>
 

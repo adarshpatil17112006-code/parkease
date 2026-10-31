@@ -83,7 +83,7 @@ export default function ParkingMap({
             white-space: nowrap;
           ">
             <span>🅿️</span>
-            <span>$${spot.pricePerHour.toFixed(2)}/h</span>
+            <span>₹${spot.pricePerHour.toFixed(2)}/h</span>
           </div>
         `,
         iconSize: [80, 32],
@@ -108,7 +108,7 @@ export default function ParkingMap({
             ${spot.location}
           </p>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 11px;">
-            <span style="color: #0284c7; font-weight: 700;">$${spot.pricePerHour.toFixed(2)} / hour</span>
+            <span style="color: #0284c7; font-weight: 700;">₹${spot.pricePerHour.toFixed(2)} / hour</span>
             <span style="color: #059669; font-weight: 600;">${spot.availableSpaces} spots left</span>
           </div>
           <button id="book-btn-${spot.id}" style="

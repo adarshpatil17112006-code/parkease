@@ -6,7 +6,7 @@ export default function ListParkingModal({ isOpen, onClose }) {
   const [spaceType, setSpaceType] = useState('Private Driveway');
   const [address, setAddress] = useState('');
   const [spotsCount, setSpotsCount] = useState(1);
-  const [hourlyPrice, setHourlyPrice] = useState(4);
+  const [hourlyPrice, setHourlyPrice] = useState(40);
   const [ownerName, setOwnerName] = useState('');
   const [ownerEmail, setOwnerEmail] = useState('');
   const [hasEV, setHasEV] = useState(false);
@@ -93,7 +93,7 @@ export default function ListParkingModal({ isOpen, onClose }) {
               <div className="p-4 rounded-2xl bg-gradient-to-r from-sky-50 to-blue-50/70 border border-sky-200/80 flex items-center justify-between">
                 <div>
                   <div className="text-xs font-semibold text-sky-900">Estimated Host Earnings</div>
-                  <div className="text-2xl font-black text-sky-700 mt-0.5">${estimatedMonthly} <span className="text-xs font-normal text-slate-600">/ month</span></div>
+                  <div className="text-2xl font-black text-sky-700 mt-0.5">₹{estimatedMonthly.toLocaleString('en-IN')} <span className="text-xs font-normal text-slate-600">/ month</span></div>
                   <p className="text-[11px] text-slate-500 mt-0.5">Based on ~8 hrs daily utilization for {spotsCount} space(s)</p>
                 </div>
                 <div className="w-12 h-12 rounded-2xl bg-white border border-sky-200 shadow-sm flex items-center justify-center text-sky-600">
@@ -164,15 +164,15 @@ export default function ListParkingModal({ isOpen, onClose }) {
 
                 <div>
                   <label className="block text-xs font-medium text-slate-700 mb-1">
-                    Hourly Price ($ / hr)
+                    Hourly Price (₹ / hr)
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-2 text-slate-400 text-xs">$</span>
+                    <span className="absolute left-3 top-2 text-slate-400 text-xs">₹</span>
                     <input
                       type="number"
-                      min={1}
-                      max={50}
-                      step={0.5}
+                      min={10}
+                      max={500}
+                      step={5}
                       value={hourlyPrice}
                       onChange={(e) => setHourlyPrice(Number(e.target.value))}
                       className="w-full pl-7 pr-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent bg-white text-slate-800"
@@ -286,11 +286,11 @@ export default function ListParkingModal({ isOpen, onClose }) {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Proposed Rate:</span>
-                  <span className="font-semibold text-slate-800">${hourlyPrice}.00 / hour</span>
+                  <span className="font-semibold text-slate-800">₹{hourlyPrice}.00 / hour</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Est. Monthly Earnings:</span>
-                  <span className="font-bold text-emerald-600">${estimatedMonthly} / mo</span>
+                  <span className="font-bold text-emerald-600">₹{estimatedMonthly.toLocaleString('en-IN')} / mo</span>
                 </div>
               </div>
 

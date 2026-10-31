@@ -212,7 +212,7 @@ export default function MyBookingsPage({ onOpenAuth, currentUser }) {
                       <span className="text-slate-400 block text-[11px] flex items-center gap-1">
                         <CreditCard className="w-3 h-3 text-sky-600" /> Paid
                       </span>
-                      <span className="font-bold text-emerald-600">{b.totalPaid || '$5.00'}</span>
+                      <span className="font-bold text-emerald-600">{b.totalPaid || '₹50.00'}</span>
                     </div>
                   </div>
 

@@ -232,7 +232,7 @@ export default function FindParkingPage() {
 
                     <div className="pt-2 border-t border-slate-100 flex items-center justify-between mt-2">
                       <div>
-                        <span className="text-sm font-extrabold text-slate-900">${spot.pricePerHour.toFixed(2)}</span>
+                        <span className="text-sm font-extrabold text-slate-900">₹{spot.pricePerHour.toFixed(2)}</span>
                         <span className="text-[10px] text-slate-400"> / hr</span>
                       </div>
 
@@ -332,7 +332,7 @@ export default function FindParkingPage() {
                   <div className="flex items-baseline justify-between mb-3 pt-3">
                     <span className="text-xs text-slate-500">Rate</span>
                     <div>
-                      <span className="text-lg font-extrabold text-slate-900">${spot.pricePerHour.toFixed(2)}</span>
+                      <span className="text-lg font-extrabold text-slate-900">₹{spot.pricePerHour.toFixed(2)}</span>
                       <span className="text-xs text-slate-500"> / hr</span>
                     </div>
                   </div>

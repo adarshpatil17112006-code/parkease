@@ -133,7 +133,7 @@ export async function createParkingSpace(req, res) {
       address,
       spaceType = 'Private Driveway',
       spotsCount = 1,
-      hourlyPrice = 4.0,
+      hourlyPrice = 40.0,
       hasCCTV = true,
       hasEV = false,
       isCovered = false,

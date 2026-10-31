@@ -29,10 +29,10 @@ export async function createBooking(req, res) {
     const reference = `PE-${Math.floor(100000 + Math.random() * 900000)}`;
     const bayNumber = `Bay P-${Math.floor(1 + Math.random() * 18).toString().padStart(2, '0')}`;
 
-    // Price calculation
+    // Price calculation (INR)
     const durationNum = Number(duration) || 2;
     const baseCost = facility.price_per_hour * durationNum;
-    const platformFee = 0.50;
+    const platformFee = 10.00;
     const grandTotal = Number((baseCost + platformFee).toFixed(2));
 
     // Generate dynamic QR code payload
@@ -96,7 +96,7 @@ export async function createBooking(req, res) {
         duration: `${durationNum} hour(s)`,
         vehicleType,
         vehiclePlate,
-        totalPaid: `$${grandTotal.toFixed(2)}`,
+        totalPaid: `₹${grandTotal.toFixed(2)}`,
         qrCode: qrDataUrl,
         status: 'confirmed'
       }

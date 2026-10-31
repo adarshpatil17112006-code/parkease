@@ -77,7 +77,7 @@ export async function submitParkingListing(spaceData) {
         id: `park-${Date.now()}`,
         name: spaceData.address,
         location: spaceData.address,
-        pricePerHour: spaceData.hourlyPrice || 4.0,
+        pricePerHour: spaceData.hourlyPrice || 40.0,
         availableSpaces: spaceData.spotsCount || 1,
         type: spaceData.spaceType || 'Private Driveway'
       }
@@ -116,7 +116,7 @@ export async function submitBooking(bookingPayload) {
       duration: `${bookingPayload.duration || 2} hour(s)`,
       vehicleType: bookingPayload.vehicleType,
       vehiclePlate: bookingPayload.vehiclePlate || 'KA-05-EX-4921',
-      totalPaid: `$${((bookingPayload.pricePerHour || 4.5) * (bookingPayload.duration || 2) + 0.5).toFixed(2)}`,
+      totalPaid: `₹${((bookingPayload.pricePerHour || 40.0) * (bookingPayload.duration || 2) + 10).toFixed(2)}`,
       paymentMethod: bookingPayload.paymentMethod || 'UPI / QR',
       status: 'confirmed'
     };
