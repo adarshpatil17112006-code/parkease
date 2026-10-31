@@ -1,6 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 import { initDb, getDb } from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import parkingRoutes from './routes/parkingRoutes.js';
@@ -44,20 +47,35 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Root welcome
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Welcome to ParkEase Backend API',
-    endpoints: [
-      '/api/parking',
-      '/api/bookings',
-      '/api/assistance',
-      '/api/promotions',
-      '/api/auth',
-      '/api/health'
-    ]
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const distPath = path.join(__dirname, '../dist');
+
+// Serve static frontend files if built
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  app.use((req, res, next) => {
+    if (req.method === 'GET' && !req.path.startsWith('/api')) {
+      return res.sendFile(path.join(distPath, 'index.html'));
+    }
+    next();
   });
-});
+} else {
+  // Root welcome fallback in dev mode
+  app.get('/', (req, res) => {
+    res.json({
+      message: 'Welcome to ParkEase Backend API',
+      endpoints: [
+        '/api/parking',
+        '/api/bookings',
+        '/api/assistance',
+        '/api/promotions',
+        '/api/auth',
+        '/api/health'
+      ]
+    });
+  });
+}
 
 // Global error handler
 app.use((err, req, res, _next) => {
