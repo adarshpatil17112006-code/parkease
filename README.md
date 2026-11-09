@@ -7,6 +7,7 @@ ParkEase is a modern, responsive full-stack platform designed to eliminate parki
 
 ## 🌟 Key Highlights
 
+- **🌐 Instant English ↔ हिन्दी (Hindi) Toggle**: Single-click language switch across all navigation bars, hero search, booking modals, and dashboards with persistent `localStorage` preference.
 - **🗺️ Live Interactive Map**: Powered by Leaflet & OpenStreetMap (zero paid API keys required). Features clickable pins, availability counters, EV charging indicators, and dynamic popups.
 - **⚡ Three Search Views**: Toggle seamlessly between **Split View** (cards + sticky map), **Map Only**, and **Grid Only**.
 - **🎫 Digital QR Entry Passes**: Instant reservation system that auto-allocates parking stalls (`Bay P-04`) and generates cryptographically verified QR passes for barrier gates.
