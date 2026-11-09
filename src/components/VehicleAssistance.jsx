@@ -1,8 +1,11 @@
 import React from 'react';
 import { Wrench, Disc, Truck, Zap, ShieldCheck, ArrowRight, Clock, Phone, AlertTriangle } from 'lucide-react';
 import { assistanceServices } from '../data/mockData';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function VehicleAssistance({ onRequestAssistance }) {
+  const { t } = useLanguage();
+
   // Map string icon names to Lucide icon components
   const iconMap = {
     Wrench: Wrench,
@@ -21,13 +24,13 @@ export default function VehicleAssistance({ onRequestAssistance }) {
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold mb-3">
               <AlertTriangle className="w-3.5 h-3.5" />
-              <span>24/7 Rapid Emergency Response</span>
+              <span>{t('assistance.badge')}</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-              Help Is Just Around the Corner.
+              {t('assistance.title')}
             </h2>
             <p className="text-slate-600 text-sm sm:text-base mt-2">
-              Stranded with a flat tire, dead battery, or unexpected breakdown? Our network of certified mobile mechanics and tow operators is ready to roll.
+              {t('assistance.subtitle')}
             </p>
           </div>
 
@@ -37,8 +40,10 @@ export default function VehicleAssistance({ onRequestAssistance }) {
               <Phone className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Emergency Dispatch</div>
-              <div className="text-sm font-black text-slate-900">1800-PARK-HELP</div>
+              <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                {t('assistance.emergencyDispatch')}
+              </div>
+              <div className="text-sm font-black text-slate-900">{t('assistance.hotline')}</div>
             </div>
           </div>
         </div>
@@ -98,7 +103,7 @@ export default function VehicleAssistance({ onRequestAssistance }) {
                     onClick={() => onRequestAssistance(service)}
                     className="w-full py-2.5 px-3 rounded-xl bg-sky-50 hover:bg-sky-600 text-sky-700 hover:text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer group-hover:bg-sky-600 group-hover:text-white"
                   >
-                    <span>Find Service</span>
+                    <span>{t('assistance.findService')}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -114,14 +119,14 @@ export default function VehicleAssistance({ onRequestAssistance }) {
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div className="text-slate-700">
-              <span className="font-bold text-slate-900">Standardized Pricing &amp; Certified Mechanics:</span> All roadside providers are vetted, insured, and abide by transparent flat-rate pricing.
+              <span className="font-bold text-slate-900">{t('assistance.pricingGuarantee')}</span> {t('assistance.pricingGuaranteeDesc')}
             </div>
           </div>
           <button
             onClick={() => onRequestAssistance(assistanceServices[0])}
             className="shrink-0 text-sky-600 hover:text-sky-700 font-bold hover:underline"
           >
-            View Coverage Area →
+            {t('assistance.viewCoverage')}
           </button>
         </div>
 

@@ -13,6 +13,7 @@ import ListParkingModal from './components/ListParkingModal';
 import AssistanceModal from './components/AssistanceModal';
 import Toast from './components/Toast';
 import { apiGetMe, apiLogout } from './services/api';
+import { LanguageProvider } from './context/LanguageContext';
 
 function AppContent() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -149,8 +150,10 @@ function AppContent() {
 
 export default function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <LanguageProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </LanguageProvider>
   );
 }

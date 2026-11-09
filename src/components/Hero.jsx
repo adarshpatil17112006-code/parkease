@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { MapPin, Search, ArrowRight, ShieldCheck, Car, Sparkles } from 'lucide-react';
 import HeroIllustration from './HeroIllustration';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Hero({ onSearchSubmit, onOpenListParking }) {
+  const { t } = useLanguage();
   const [heroLocation, setHeroLocation] = useState('');
 
   const handleSearch = (e) => {
@@ -41,20 +43,17 @@ export default function Hero({ onSearchSubmit, onOpenListParking }) {
             {/* Pill Badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white shadow-xs border border-sky-200 text-sky-800 text-xs font-bold tracking-wide">
               <span className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
-              <span>Smart Parking &amp; 24/7 Roadside Assistance</span>
+              <span>{t('hero.badge')}</span>
             </div>
 
             {/* Main Headline */}
             <h1 className="text-4xl sm:text-5xl xl:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.12]">
-              Parking Made Easy. <br />
-              <span className="bg-gradient-to-r from-sky-600 to-blue-700 bg-clip-text text-transparent">
-                Every Journey.
-              </span>
+              {t('hero.title')}
             </h1>
 
             {/* Subtitle */}
             <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
-              Find nearby parking, book your spot in seconds, and get reliable vehicle assistance whenever you need it.
+              {t('hero.subtitle')}
             </p>
 
             {/* Hero Location Search Bar */}
@@ -69,7 +68,7 @@ export default function Hero({ onSearchSubmit, onOpenListParking }) {
                     type="text"
                     value={heroLocation}
                     onChange={(e) => setHeroLocation(e.target.value)}
-                    placeholder="Where are you heading? (e.g. Downtown Metro)"
+                    placeholder={t('hero.searchPlaceholder')}
                     className="w-full text-sm text-slate-800 placeholder-slate-400 bg-transparent focus:outline-none"
                   />
                 </div>
@@ -79,7 +78,7 @@ export default function Hero({ onSearchSubmit, onOpenListParking }) {
                   className="w-full sm:w-auto shrink-0 px-6 py-3 rounded-xl sm:rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Search className="w-4 h-4" />
-                  <span>Find Parking</span>
+                  <span>{t('hero.findBtn')}</span>
                 </button>
               </form>
 
@@ -108,7 +107,7 @@ export default function Hero({ onSearchSubmit, onOpenListParking }) {
                 href="#find-parking"
                 className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2 group cursor-pointer"
               >
-                <span>Find Nearby Parking</span>
+                <span>{t('hero.findBtn')}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </a>
 
@@ -117,7 +116,7 @@ export default function Hero({ onSearchSubmit, onOpenListParking }) {
                 onClick={onOpenListParking}
                 className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm border border-slate-300 shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>List Your Parking</span>
+                <span>{t('nav.listParking')}</span>
               </button>
             </div>
 

@@ -1,31 +1,34 @@
 import React from 'react';
 import { Search, CalendarCheck, Car, ArrowRight, CheckCircle } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function HowItWorks() {
+  const { t } = useLanguage();
+
   const steps = [
     {
       step: '01',
-      title: 'Find Parking',
-      description: 'Search for nearby spaces by street, neighborhood, or landmark. Compare real pricing and amenities.',
+      title: t('howItWorks.step1Title'),
+      description: t('howItWorks.step1Desc'),
       icon: Search,
       accentColor: 'from-sky-500 to-blue-600',
-      badge: 'Step 1'
+      badge: t('howItWorks.step1Badge')
     },
     {
       step: '02',
-      title: 'Book Your Spot',
-      description: 'Choose your preferred date, arrival time, and parking duration. Get instant confirmation with zero queues.',
+      title: t('howItWorks.step2Title'),
+      description: t('howItWorks.step2Desc'),
       icon: CalendarCheck,
       accentColor: 'from-blue-600 to-indigo-600',
-      badge: 'Step 2'
+      badge: t('howItWorks.step2Badge')
     },
     {
       step: '03',
-      title: 'Park With Ease',
-      description: 'Follow turn-by-turn directions to your reserved stall. Scan your digital QR pass at the barrier and enjoy your day.',
+      title: t('howItWorks.step3Title'),
+      description: t('howItWorks.step3Desc'),
       icon: Car,
       accentColor: 'from-indigo-600 to-slate-900',
-      badge: 'Step 3'
+      badge: t('howItWorks.step3Badge')
     }
   ];
 
@@ -36,13 +39,13 @@ export default function HowItWorks() {
         {/* Section Heading */}
         <div className="text-center max-w-2xl mx-auto mb-14">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 border border-sky-100 text-sky-800 text-xs font-bold mb-3">
-            <span>Seamless 3-Step Experience</span>
+            <span>{t('howItWorks.badge')}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            How ParkEase Works
+            {t('howItWorks.title')}
           </h2>
           <p className="text-slate-600 text-sm sm:text-base mt-2">
-            No more circling blocks in search of a spot. ParkEase simplifies parking into three intuitive steps.
+            {t('howItWorks.subtitle')}
           </p>
         </div>
 
@@ -87,7 +90,7 @@ export default function HowItWorks() {
                 {/* Mini Checkpoint Indicator */}
                 <div className="mt-6 pt-4 border-t border-slate-100 w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-500">
                   <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
-                  <span>Verified &amp; Guaranteed</span>
+                  <span>{t('howItWorks.verifiedGuaranteed')}</span>
                 </div>
               </div>
             );
@@ -100,7 +103,7 @@ export default function HowItWorks() {
             href="#find-parking"
             className="inline-flex items-center gap-2 text-sm font-bold text-sky-700 hover:text-sky-800 hover:underline"
           >
-            <span>Ready to park? Search available spots now</span>
+            <span>{t('howItWorks.readyToPark')}</span>
             <ArrowRight className="w-4 h-4" />
           </a>
         </div>

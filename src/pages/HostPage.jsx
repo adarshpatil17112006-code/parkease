@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { IndianRupee, ShieldCheck, Calendar, Sparkles, ArrowRight } from 'lucide-react';
 import ListParkingModal from '../components/ListParkingModal';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function HostPage({ onOpenAuth }) {
+  const { t } = useLanguage();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [calculatorSpots, setCalculatorSpots] = useState(1);
   const [calculatorRate, setCalculatorRate] = useState(40);
@@ -20,13 +22,13 @@ export default function HostPage({ onOpenAuth }) {
             <div className="lg:col-span-7 space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/20 text-sky-300 border border-sky-400/30 text-xs font-bold">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>ParkEase Host Program</span>
+                <span>{t('host.pageBadge')}</span>
               </div>
               <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-                Turn Idle Concrete into Passive Income.
+                {t('host.pageTitle')}
               </h1>
               <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-                Whether you own a driveway near a train station, an apartment basement stall, or a commercial parking lot, ParkEase helps you connect with vetted motorists and manage automated bookings.
+                {t('host.pageSubtitle')}
               </p>
               <div className="pt-2 flex flex-wrap gap-3">
                 <button
@@ -34,7 +36,7 @@ export default function HostPage({ onOpenAuth }) {
                   onClick={() => setIsModalOpen(true)}
                   className="px-7 py-3.5 rounded-2xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold text-sm shadow-md transition-all flex items-center gap-2 cursor-pointer"
                 >
-                  <span>List Your Space Now</span>
+                  <span>{t('host.listSpaceNow')}</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
                 <button
@@ -42,7 +44,7 @@ export default function HostPage({ onOpenAuth }) {
                   onClick={() => onOpenAuth('login')}
                   className="px-6 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm border border-slate-700 transition-all cursor-pointer"
                 >
-                  Existing Host Login
+                  {t('host.existingLogin')}
                 </button>
               </div>
             </div>
@@ -50,15 +52,15 @@ export default function HostPage({ onOpenAuth }) {
             {/* Interactive Host Earnings Estimator Widget */}
             <div className="lg:col-span-5 bg-slate-800/90 p-6 rounded-3xl border border-slate-700 shadow-xl space-y-4">
               <div className="flex items-center justify-between border-b border-slate-700 pb-3">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-300">Earnings Calculator</span>
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-300">{t('host.calculator')}</span>
                 <span className="text-[11px] text-sky-400 font-bold bg-sky-950 px-2.5 py-0.5 rounded-full border border-sky-800">
-                  Instant Projection
+                  {t('host.instantProjection')}
                 </span>
               </div>
 
               <div>
                 <div className="flex justify-between text-xs text-slate-300 mb-1">
-                  <span>Number of Parking Spaces:</span>
+                  <span>{t('host.numSpaces')}</span>
                   <span className="font-bold text-white">{calculatorSpots} Space(s)</span>
                 </div>
                 <input
@@ -73,7 +75,7 @@ export default function HostPage({ onOpenAuth }) {
 
               <div>
                 <div className="flex justify-between text-xs text-slate-300 mb-1">
-                  <span>Hourly Rate:</span>
+                  <span>{t('host.hourlyRate')}</span>
                   <span className="font-bold text-white">₹{calculatorRate} / hour</span>
                 </div>
                 <input
@@ -88,11 +90,11 @@ export default function HostPage({ onOpenAuth }) {
               </div>
 
               <div className="p-4 rounded-2xl bg-slate-900 border border-slate-700/80 text-center">
-                <span className="text-xs text-slate-400 uppercase tracking-wider">Projected Monthly Earnings</span>
+                <span className="text-xs text-slate-400 uppercase tracking-wider">{t('host.projectedEarnings')}</span>
                 <div className="text-3xl font-black text-sky-400 mt-1">
-                  ₹{estimatedMonthly.toLocaleString('en-IN')} <span className="text-xs text-slate-400 font-normal">/ month</span>
+                  ₹{estimatedMonthly.toLocaleString('en-IN')} <span className="text-xs text-slate-400 font-normal">{t('host.perMonth')}</span>
                 </div>
-                <p className="text-[11px] text-slate-500 mt-1">Estimated at ~8 hrs utilization per business day</p>
+                <p className="text-[11px] text-slate-500 mt-1">{t('host.utilizationNote')}</p>
               </div>
 
               <button
@@ -100,7 +102,7 @@ export default function HostPage({ onOpenAuth }) {
                 onClick={() => setIsModalOpen(true)}
                 className="w-full py-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition-colors cursor-pointer"
               >
-                Start Listing This Space
+                {t('host.listBtn')}
               </button>
             </div>
 
@@ -113,9 +115,9 @@ export default function HostPage({ onOpenAuth }) {
             <div className="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center mb-4">
               <IndianRupee className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-slate-900 mb-2">Automated Payouts</h3>
+            <h3 className="text-base font-bold text-slate-900 mb-2">{t('host.automatedPayouts')}</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Your earnings are transferred directly to your bank account weekly or monthly with full statement reporting.
+              {t('host.automatedPayoutsDesc')}
             </p>
           </div>
 
@@ -123,9 +125,9 @@ export default function HostPage({ onOpenAuth }) {
             <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4">
               <ShieldCheck className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-slate-900 mb-2">ParkEase Host Guarantee</h3>
+            <h3 className="text-base font-bold text-slate-900 mb-2">{t('host.hostGuarantee')}</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Every driver is identity-verified with active vehicle registration and ₹50,00,000 comprehensive property damage coverage.
+              {t('host.hostGuaranteeDesc')}
             </p>
           </div>
 
@@ -133,9 +135,9 @@ export default function HostPage({ onOpenAuth }) {
             <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4">
               <Calendar className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-slate-900 mb-2">Complete Availability Control</h3>
+            <h3 className="text-base font-bold text-slate-900 mb-2">{t('host.availabilityControl')}</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Need your driveway for personal guests on weekends? Block dates anytime via your host dashboard in 1 click.
+              {t('host.availabilityControlDesc')}
             </p>
           </div>
         </div>

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { MapPin, Clock, Navigation, Zap, Star, Info, ChevronRight, Eye } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function ParkingListings({ parkingData, filterQuery, onBookNow, onViewDetails }) {
+  const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState('All');
   const [showAll, setShowAll] = useState(false);
 
@@ -38,13 +40,13 @@ export default function ParkingListings({ parkingData, filterQuery, onBookNow, o
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-100/80 text-sky-800 text-xs font-bold mb-2">
               <MapPin className="w-3.5 h-3.5 text-sky-600" />
-              <span>Verified Stalls Near You</span>
+              <span>{t('parking.badge')}</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              Nearby Parking Spaces
+              {t('parking.title')}
             </h2>
             <p className="text-sm text-slate-600 mt-1 max-w-xl">
-              Browse secured parking spots with upfront pricing, easy access points, and real-time stall reservations.
+              {t('parking.subtitle')}
             </p>
           </div>
 
@@ -52,7 +54,7 @@ export default function ParkingListings({ parkingData, filterQuery, onBookNow, o
           <div className="flex flex-col sm:items-end gap-2">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-50 border border-amber-200/70 text-amber-800 text-xs font-medium">
               <Info className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-              <span>Sample Data: Availability shown for demonstration</span>
+              <span>{t('parking.sampleData')}</span>
             </div>
             
             {filterQuery && (
@@ -162,10 +164,10 @@ export default function ParkingListings({ parkingData, filterQuery, onBookNow, o
                   {/* Price & Action Buttons */}
                   <div className="pt-3 border-t border-slate-100 space-y-3">
                     <div className="flex items-baseline justify-between">
-                      <span className="text-xs text-slate-500">Hourly Rate</span>
+                      <span className="text-xs text-slate-500">{t('parking.rate')}</span>
                       <div className="text-right">
                         <span className="text-lg font-extrabold text-slate-900">₹{spot.pricePerHour.toFixed(2)}</span>
-                        <span className="text-xs text-slate-500 font-medium"> / hr</span>
+                        <span className="text-xs text-slate-500 font-medium"> {t('parking.perHour')}</span>
                       </div>
                     </div>
 
@@ -177,7 +179,7 @@ export default function ParkingListings({ parkingData, filterQuery, onBookNow, o
                         className="py-2.5 px-3 rounded-xl border border-slate-200 hover:border-slate-300 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 transition-colors flex items-center justify-center gap-1 cursor-pointer"
                       >
                         <Eye className="w-3.5 h-3.5" />
-                        <span>Details</span>
+                        <span>{t('parking.viewDetails')}</span>
                       </button>
 
                       <button
@@ -185,7 +187,7 @@ export default function ParkingListings({ parkingData, filterQuery, onBookNow, o
                         onClick={() => onBookNow(spot)}
                         className="py-2.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold shadow-xs hover:shadow transition-all flex items-center justify-center gap-1 cursor-pointer"
                       >
-                        <span>Book Now</span>
+                        <span>{t('parking.bookNow')}</span>
                       </button>
                     </div>
                   </div>
@@ -218,7 +220,7 @@ export default function ParkingListings({ parkingData, filterQuery, onBookNow, o
             onClick={() => setShowAll(!showAll)}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white hover:bg-slate-100 text-slate-800 text-sm font-bold border border-slate-200 shadow-2xs transition-all cursor-pointer"
           >
-            <span>{showAll ? 'Show Fewer Spots' : 'View All Parking Spaces (6)'}</span>
+            <span>{showAll ? 'Show Fewer Spots' : t('parking.viewAll')}</span>
             <ChevronRight className={`w-4 h-4 transition-transform ${showAll ? '-rotate-90' : 'rotate-90'}`} />
           </button>
         </div>

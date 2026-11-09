@@ -16,8 +16,10 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { submitBooking } from '../services/api';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function BookingModal({ parking, isOpen, onClose, onBookingSuccess }) {
+  const { t } = useLanguage();
   const [step, setStep] = useState(1); // 1 = Details, 2 = Payment, 3 = Confirmed Pass
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [startTime, setStartTime] = useState('14:00');
@@ -103,16 +105,16 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
           <div>
             <div className="flex items-center gap-2">
               <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-500/20 text-sky-300 border border-sky-400/30">
-                {step === 3 ? 'Pass Issued' : step === 2 ? 'Checkout' : 'Reservation'}
+                {step === 3 ? t('bookingModal.passIssued') : step === 2 ? t('bookingModal.checkout') : t('bookingModal.reservation')}
               </span>
-              <span className="text-xs text-slate-300">Instant Digital Hold</span>
+              <span className="text-xs text-slate-300">{t('bookingModal.instantHold')}</span>
             </div>
             <h3 className="text-lg font-bold text-white mt-1">
               {step === 3
-                ? 'Booking Confirmed!'
+                ? t('bookingModal.passConfirmedTitle')
                 : step === 2
-                ? 'Secure Payment'
-                : `Reserve at ${parking.name}`}
+                ? t('bookingModal.checkoutTitle')
+                : `${t('bookingModal.reservationTitle')} ${parking.name}`}
             </h3>
           </div>
           <button
@@ -127,13 +129,13 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
         {/* Step Progress Bar */}
         <div className="grid grid-cols-3 bg-slate-100/70 border-b border-slate-200 text-[11px] font-bold text-center">
           <div className={`py-2 border-r border-slate-200 ${step >= 1 ? 'bg-sky-50 text-sky-700 font-extrabold' : 'text-slate-400'}`}>
-            1. Details
+            {t('bookingModal.step1')}
           </div>
           <div className={`py-2 border-r border-slate-200 ${step >= 2 ? 'bg-sky-50 text-sky-700 font-extrabold' : 'text-slate-400'}`}>
-            2. Payment
+            {t('bookingModal.step2')}
           </div>
           <div className={`py-2 ${step === 3 ? 'bg-emerald-50 text-emerald-700 font-extrabold' : 'text-slate-400'}`}>
-            3. Digital Pass
+            {t('bookingModal.step3')}
           </div>
         </div>
 
@@ -149,9 +151,9 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                   <div className="font-semibold text-slate-900">{parking.name}</div>
                   <div className="text-slate-500 mt-0.5">{parking.location}</div>
                   <div className="mt-1 flex items-center gap-3 text-slate-600">
-                    <span className="font-medium text-sky-700">₹{parking.pricePerHour.toFixed(2)}/hour</span>
+                    <span className="font-medium text-sky-700">₹{parking.pricePerHour.toFixed(2)}{t('parking.perHour')}</span>
                     <span>•</span>
-                    <span className="text-emerald-700 font-medium">{parking.availableSpaces} spots available</span>
+                    <span className="text-emerald-700 font-medium">{parking.availableSpaces} {t('parking.spotsAvailable')}</span>
                   </div>
                 </div>
               </div>
@@ -159,7 +161,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
               {/* Vehicle Type Selection */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                  Select Vehicle Category
+                  {t('bookingModal.vehicleCategory')}
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                   {vehicleOptions.map((opt) => (
@@ -184,7 +186,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-slate-600 mb-1.5 flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-sky-600" /> Date
+                    <Calendar className="w-3.5 h-3.5 text-sky-600" /> {t('bookingModal.date')}
                   </label>
                   <input
                     type="date"
@@ -197,7 +199,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
 
                 <div>
                   <label className="block text-xs font-medium text-slate-600 mb-1.5 flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-sky-600" /> Start Time
+                    <Clock className="w-3.5 h-3.5 text-sky-600" /> {t('bookingModal.startTime')}
                   </label>
                   <input
                     type="time"
@@ -213,7 +215,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-slate-600 mb-1.5">
-                    Duration (Hours)
+                    {t('bookingModal.duration')}
                   </label>
                   <select
                     value={duration}
@@ -231,7 +233,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
 
                 <div>
                   <label className="block text-xs font-medium text-slate-600 mb-1.5">
-                    License Plate (Optional)
+                    {t('bookingModal.plate')}
                   </label>
                   <input
                     type="text"
@@ -246,15 +248,15 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
               {/* Price Calculation Summary */}
               <div className="border-t border-dashed border-slate-200 pt-3 space-y-1.5 text-xs">
                 <div className="flex justify-between text-slate-600">
-                  <span>Parking rate ({duration}h × ₹{parking.pricePerHour.toFixed(2)})</span>
+                  <span>{t('bookingModal.parkingRate')} ({duration}h × ₹{parking.pricePerHour.toFixed(2)})</span>
                   <span className="font-semibold text-slate-800">₹{totalCost}</span>
                 </div>
                 <div className="flex justify-between text-slate-600">
-                  <span>Platform service fee</span>
+                  <span>{t('bookingModal.serviceFee')}</span>
                   <span className="font-semibold text-slate-800">₹{bookingFee.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm font-bold text-slate-900 pt-2 border-t border-slate-100">
-                  <span>Estimated Total</span>
+                  <span>{t('bookingModal.totalEstimated')}</span>
                   <span className="text-sky-600">₹{grandTotal}</span>
                 </div>
               </div>
@@ -264,7 +266,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                 type="submit"
                 className="w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm bg-sky-600 hover:bg-sky-500 text-white shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>Proceed to Payment (₹{grandTotal})</span>
+                <span>{t('bookingModal.proceedBtn')} (₹{grandTotal})</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
@@ -275,9 +277,9 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
             <form onSubmit={handleConfirmPayment} className="space-y-4">
               <div className="flex items-center justify-between pb-2 border-b border-slate-100">
                 <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                  Select Payment Method
+                  {t('bookingModal.selectPaymentMethod')}
                 </span>
-                <span className="text-xs font-extrabold text-sky-600">Total: ₹{grandTotal}</span>
+                <span className="text-xs font-extrabold text-sky-600">{t('bookingModal.totalLabel')} ₹{grandTotal}</span>
               </div>
 
               {/* Payment Methods Grid */}
@@ -293,10 +295,12 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                 >
                   <div className="flex items-center justify-between mb-2">
                     <Smartphone className="w-5 h-5 text-sky-600" />
-                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700">Instant</span>
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700">
+                      {t('bookingModal.instantBadge')}
+                    </span>
                   </div>
-                  <span className="text-xs font-bold">UPI / QR</span>
-                  <span className="text-[10px] text-slate-500">Google Pay, PhonePe, Paytm</span>
+                  <span className="text-xs font-bold">{t('bookingModal.upi')}</span>
+                  <span className="text-[10px] text-slate-500">{t('bookingModal.upiDesc')}</span>
                 </button>
 
                 <button
@@ -312,8 +316,8 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                     <CreditCard className="w-5 h-5 text-sky-600" />
                     <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-sky-100 text-sky-700">Card</span>
                   </div>
-                  <span className="text-xs font-bold">Credit / Debit</span>
-                  <span className="text-[10px] text-slate-500">Visa, MasterCard, RuPay</span>
+                  <span className="text-xs font-bold">{t('bookingModal.card')}</span>
+                  <span className="text-[10px] text-slate-500">{t('bookingModal.cardDesc')}</span>
                 </button>
 
                 <button
@@ -326,8 +330,8 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                   }`}
                 >
                   <Building2 className="w-5 h-5 text-sky-600 mb-2" />
-                  <span className="text-xs font-bold">Net Banking</span>
-                  <span className="text-[10px] text-slate-500">All major Indian banks</span>
+                  <span className="text-xs font-bold">{t('bookingModal.netbanking')}</span>
+                  <span className="text-[10px] text-slate-500">{t('bookingModal.netbankingDesc')}</span>
                 </button>
 
                 <button
@@ -340,15 +344,15 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                   }`}
                 >
                   <Banknote className="w-5 h-5 text-sky-600 mb-2" />
-                  <span className="text-xs font-bold">Pay at Gate</span>
-                  <span className="text-[10px] text-slate-500">Fastag / Cash on arrival</span>
+                  <span className="text-xs font-bold">{t('bookingModal.payAtGate')}</span>
+                  <span className="text-[10px] text-slate-500">{t('bookingModal.payAtGateDesc')}</span>
                 </button>
               </div>
 
               {/* Dynamic Payment Details Input */}
               {paymentMethod === 'upi' && (
                 <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-                  <label className="block text-xs font-medium text-slate-700">Enter UPI ID</label>
+                  <label className="block text-xs font-medium text-slate-700">{t('bookingModal.enterUpi')}</label>
                   <input
                     type="text"
                     value={upiId}
@@ -357,7 +361,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                     className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-sky-500"
                   />
                   <span className="text-[10px] text-slate-500 block">
-                    A test payment request will be simulated on confirmation.
+                    {t('bookingModal.upiNote')}
                   </span>
                 </div>
               )}
@@ -365,7 +369,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
               {paymentMethod === 'card' && (
                 <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
                   <div>
-                    <label className="block text-xs font-medium text-slate-700 mb-1">Card Number</label>
+                    <label className="block text-xs font-medium text-slate-700 mb-1">{t('bookingModal.cardNumber')}</label>
                     <input
                       type="text"
                       value={cardNumber}
@@ -375,7 +379,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="block text-xs font-medium text-slate-700 mb-1">Expiry</label>
+                      <label className="block text-xs font-medium text-slate-700 mb-1">{t('bookingModal.expiry')}</label>
                       <input
                         type="text"
                         value={cardExpiry}
@@ -384,7 +388,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-slate-700 mb-1">CVV</label>
+                      <label className="block text-xs font-medium text-slate-700 mb-1">{t('bookingModal.cvv')}</label>
                       <input
                         type="password"
                         maxLength={4}
@@ -400,7 +404,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
               {/* Security Badge */}
               <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-50 text-emerald-800 text-[11px] border border-emerald-200/60">
                 <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>256-Bit SSL Encrypted &amp; Verified Sandbox Checkout.</span>
+                <span>{t('bookingModal.sslEncrypted')}</span>
               </div>
 
               {/* Action Buttons */}
@@ -411,7 +415,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                   className="py-3 px-3 rounded-xl border border-slate-200 hover:border-slate-300 text-xs font-bold text-slate-700 bg-white flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  <span>Back</span>
+                  <span>{t('bookingModal.backBtn')}</span>
                 </button>
 
                 <button
@@ -419,7 +423,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                   disabled={isSubmitting}
                   className="py-3 px-4 rounded-xl font-bold text-xs bg-sky-600 hover:bg-sky-500 disabled:opacity-60 text-white shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span>{isSubmitting ? 'Verifying...' : `Pay ₹${grandTotal}`}</span>
+                  <span>{isSubmitting ? t('bookingModal.verifying') : `${t('bookingModal.payBtn')} ₹${grandTotal}`}</span>
                   <CheckCircle className="w-4 h-4" />
                 </button>
               </div>
@@ -433,38 +437,38 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                 <CheckCircle className="w-7 h-7" />
               </div>
               <div>
-                <h4 className="text-base font-bold text-slate-900">Payment &amp; Booking Confirmed!</h4>
-                <p className="text-xs text-slate-500 mt-0.5">Show this pass at the gate barrier or scan via license plate recognition.</p>
+                <h4 className="text-base font-bold text-slate-900">{t('bookingModal.passConfirmedTitle')}</h4>
+                <p className="text-xs text-slate-500 mt-0.5">{t('bookingModal.passConfirmedSubtitle')}</p>
               </div>
 
               {/* Pass Card Container */}
               <div className="p-4 rounded-2xl bg-gradient-to-b from-slate-50 to-sky-50/40 border border-sky-100 text-left space-y-3">
                 <div className="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Pass Reference</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">{t('bookingModal.passRef')}</span>
                     <div className="text-sm font-extrabold text-sky-700 tracking-wide">{confirmedBooking.reference}</div>
                   </div>
                   <div className="text-right">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Assigned Stall</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">{t('bookingModal.assignedStall')}</span>
                     <div className="text-sm font-extrabold text-slate-900">{confirmedBooking.bayNumber}</div>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div>
-                    <span className="text-slate-400">Facility:</span>
+                    <span className="text-slate-400">{t('bookingModal.facility')}</span>
                     <p className="font-semibold text-slate-800 truncate">{confirmedBooking.parkingName}</p>
                   </div>
                   <div>
-                    <span className="text-slate-400">Time:</span>
+                    <span className="text-slate-400">{t('bookingModal.time')}</span>
                     <p className="font-semibold text-slate-800">{confirmedBooking.startTime} ({confirmedBooking.duration})</p>
                   </div>
                   <div>
-                    <span className="text-slate-400">Vehicle:</span>
+                    <span className="text-slate-400">{t('bookingModal.vehicle')}</span>
                     <p className="font-semibold text-slate-800">{confirmedBooking.vehiclePlate}</p>
                   </div>
                   <div>
-                    <span className="text-slate-400">Amount Paid:</span>
+                    <span className="text-slate-400">{t('bookingModal.amountPaid')}</span>
                     <p className="font-semibold text-emerald-600">{confirmedBooking.totalPaid}</p>
                   </div>
                 </div>
@@ -482,7 +486,7 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                       <QrCode className="w-24 h-24 text-slate-900" />
                     )}
                   </div>
-                  <span className="text-[10px] text-slate-400 mt-1 font-mono">SCAN AT GATE BARRIER</span>
+                  <span className="text-[10px] text-slate-400 mt-1 font-mono">{t('bookingModal.scanAtGate')}</span>
                 </div>
               </div>
 
@@ -493,14 +497,14 @@ export default function BookingModal({ parking, isOpen, onClose, onBookingSucces
                   onClick={() => alert(`Pass ${confirmedBooking.reference} saved to your device.`)}
                   className="py-2.5 px-3 rounded-xl border border-slate-200 hover:border-slate-300 text-xs font-semibold text-slate-700 bg-white flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                 >
-                  <Download className="w-3.5 h-3.5" /> Save Pass
+                  <Download className="w-3.5 h-3.5" /> {t('bookingModal.savePass')}
                 </button>
                 <button
                   type="button"
                   onClick={handleResetAndClose}
                   className="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-xs font-semibold text-white transition-colors cursor-pointer"
                 >
-                  Done
+                  {t('bookingModal.done')}
                 </button>
               </div>
             </div>

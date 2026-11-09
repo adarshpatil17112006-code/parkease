@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { MapPin, Calendar, Clock, Timer, Search, RotateCcw } from 'lucide-react';
 import { locationsList } from '../data/mockData';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function QuickSearch({ onFilterChange, initialLocation = '' }) {
+  const { t } = useLanguage();
   const [selectedLocation, setSelectedLocation] = useState(initialLocation || 'All Locations');
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [startTime, setStartTime] = useState('12:00');
@@ -78,7 +80,7 @@ export default function QuickSearch({ onFilterChange, initialLocation = '' }) {
           <div className="lg:col-span-4">
             <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
               <MapPin className="w-4 h-4 text-sky-600" />
-              <span>Location / Area</span>
+              <span>{t('search.locationLabel')}</span>
             </label>
             <div className="relative">
               <select
@@ -98,7 +100,7 @@ export default function QuickSearch({ onFilterChange, initialLocation = '' }) {
               >
                 {locationsList.map((loc) => (
                   <option key={loc} value={loc}>
-                    {loc}
+                    {loc === 'All Locations' ? t('search.allLocations') : loc}
                   </option>
                 ))}
               </select>
@@ -114,7 +116,7 @@ export default function QuickSearch({ onFilterChange, initialLocation = '' }) {
           <div className="lg:col-span-2">
             <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
               <Calendar className="w-4 h-4 text-sky-600" />
-              <span>Date</span>
+              <span>{t('search.dateLabel')}</span>
             </label>
             <input
               type="date"
@@ -128,7 +130,7 @@ export default function QuickSearch({ onFilterChange, initialLocation = '' }) {
           <div className="lg:col-span-2">
             <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
               <Clock className="w-4 h-4 text-sky-600" />
-              <span>Start Time</span>
+              <span>{t('search.timeLabel')}</span>
             </label>
             <input
               type="time"
@@ -142,7 +144,7 @@ export default function QuickSearch({ onFilterChange, initialLocation = '' }) {
           <div className="lg:col-span-2">
             <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
               <Timer className="w-4 h-4 text-sky-600" />
-              <span>Duration</span>
+              <span>{t('search.durationLabel')}</span>
             </label>
             <div className="relative">
               <select
@@ -173,7 +175,7 @@ export default function QuickSearch({ onFilterChange, initialLocation = '' }) {
               className="w-full py-3 sm:py-3.5 px-4 rounded-2xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
             >
               <Search className="w-4 h-4" />
-              <span>Search Parking</span>
+              <span>{t('hero.findBtn')}</span>
             </button>
           </div>
 

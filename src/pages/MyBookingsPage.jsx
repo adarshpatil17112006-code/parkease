@@ -12,8 +12,10 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { fetchMyBookings, cancelBooking } from '../services/api';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function MyBookingsPage({ onOpenAuth, currentUser }) {
+  const { t } = useLanguage();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all'); // 'all' | 'active' | 'completed' | 'cancelled'
@@ -59,13 +61,13 @@ export default function MyBookingsPage({ onOpenAuth, currentUser }) {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-100 text-sky-800 text-xs font-bold mb-2">
-              <span>Driver Account Portal</span>
+              <span>{t('myBookings.portalBadge')}</span>
             </div>
             <h1 className="text-3xl font-black text-slate-900 tracking-tight">
-              My Reservations &amp; Passes
+              {t('myBookings.title')}
             </h1>
             <p className="text-slate-600 text-sm mt-1">
-              Access your digital QR parking passes, bay allocations, and booking receipts.
+              {t('myBookings.subtitle')}
             </p>
           </div>
 
@@ -73,7 +75,7 @@ export default function MyBookingsPage({ onOpenAuth, currentUser }) {
             to="/find-parking"
             className="inline-flex items-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-bold shadow-xs hover:shadow transition-all self-start sm:self-auto cursor-pointer"
           >
-            <span>Book New Spot</span>
+            <span>{t('myBookings.bookNew')}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -82,13 +84,13 @@ export default function MyBookingsPage({ onOpenAuth, currentUser }) {
         {!currentUser && (
           <div className="mb-6 p-3.5 rounded-2xl bg-sky-50 border border-sky-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
             <span className="text-sky-900 font-medium">
-              You are viewing passes saved on this browser. Sign in to permanently sync and access your reservations anywhere.
+              {t('myBookings.guestNotice')}
             </span>
             <button
               onClick={() => onOpenAuth('login')}
               className="px-3.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold shrink-0 transition-colors cursor-pointer"
             >
-              Sign In to Sync
+              {t('myBookings.signInSync')}
             </button>
           </div>
         )}
@@ -96,10 +98,10 @@ export default function MyBookingsPage({ onOpenAuth, currentUser }) {
         {/* Filter Tabs */}
         <div className="flex items-center gap-2 mb-6 border-b border-slate-200/80 pb-3">
           {[
-            { id: 'all', label: 'All Bookings' },
-            { id: 'active', label: 'Active Passes' },
-            { id: 'completed', label: 'Completed' },
-            { id: 'cancelled', label: 'Cancelled' }
+            { id: 'all', label: t('myBookings.all') },
+            { id: 'active', label: t('myBookings.active') },
+            { id: 'completed', label: t('myBookings.completed') },
+            { id: 'cancelled', label: t('myBookings.cancelled') }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -118,7 +120,7 @@ export default function MyBookingsPage({ onOpenAuth, currentUser }) {
         {/* Content */}
         {loading ? (
           <div className="p-12 text-center text-slate-400 text-sm">
-            Loading reservations...
+            {t('myBookings.loading')}
           </div>
         ) : filteredBookings.length === 0 ? (
           <div className="bg-white rounded-3xl p-10 border border-slate-200 text-center space-y-4 max-w-md mx-auto my-8">
@@ -126,16 +128,16 @@ export default function MyBookingsPage({ onOpenAuth, currentUser }) {
               <Car className="w-7 h-7" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-800">No Reservations Found</h3>
+              <h3 className="text-base font-bold text-slate-800">{t('myBookings.noBookingsTitle')}</h3>
               <p className="text-xs text-slate-500 mt-1">
-                You do not have any {filter !== 'all' ? filter : ''} parking passes recorded yet.
+                {t('myBookings.noBookingsDesc')}
               </p>
             </div>
             <Link
               to="/find-parking"
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-sky-600 hover:bg-sky-500 text-white rounded-xl text-xs font-bold"
             >
-              <span>Explore Available Parking</span>
+              <span>{t('myBookings.exploreParking')}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -166,7 +168,7 @@ export default function MyBookingsPage({ onOpenAuth, currentUser }) {
                               : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                           }`}
                         >
-                          {isCancelled ? 'Cancelled' : isCompleted ? 'Completed' : 'Active Pass'}
+                          {isCancelled ? t('myBookings.cancelled') : isCompleted ? t('myBookings.completed') : t('myBookings.active')}
                         </span>
                       </div>
                       <h3 className="text-base font-bold text-slate-900 mt-1">{b.parkingName}</h3>
@@ -178,7 +180,7 @@ export default function MyBookingsPage({ onOpenAuth, currentUser }) {
 
                     <div className="text-right">
                       <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                        Assigned Stall
+                        {t('myBookings.assignedStall')}
                       </span>
                       <span className="text-sm font-extrabold text-slate-900 px-2.5 py-1 rounded-lg bg-slate-100 inline-block mt-0.5">
                         {b.bayNumber || 'Bay Assigned'}
@@ -190,19 +192,19 @@ export default function MyBookingsPage({ onOpenAuth, currentUser }) {
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs py-3 border-y border-slate-100">
                     <div>
                       <span className="text-slate-400 block text-[11px] flex items-center gap-1">
-                        <Calendar className="w-3 h-3 text-sky-600" /> Date
+                        <Calendar className="w-3 h-3 text-sky-600" /> {t('myBookings.date')}
                       </span>
                       <span className="font-semibold text-slate-800">{b.date || 'Today'}</span>
                     </div>
                     <div>
                       <span className="text-slate-400 block text-[11px] flex items-center gap-1">
-                        <Clock className="w-3 h-3 text-sky-600" /> Time
+                        <Clock className="w-3 h-3 text-sky-600" /> {t('myBookings.time')}
                       </span>
                       <span className="font-semibold text-slate-800">{b.startTime} ({b.duration})</span>
                     </div>
                     <div>
                       <span className="text-slate-400 block text-[11px] flex items-center gap-1">
-                        <Car className="w-3 h-3 text-sky-600" /> Vehicle
+                        <Car className="w-3 h-3 text-sky-600" /> {t('myBookings.vehicle')}
                       </span>
                       <span className="font-semibold text-slate-800 uppercase truncate block">
                         {b.vehiclePlate || 'KA-05-EX-4921'}
@@ -210,7 +212,7 @@ export default function MyBookingsPage({ onOpenAuth, currentUser }) {
                     </div>
                     <div>
                       <span className="text-slate-400 block text-[11px] flex items-center gap-1">
-                        <CreditCard className="w-3 h-3 text-sky-600" /> Paid
+                        <CreditCard className="w-3 h-3 text-sky-600" /> {t('myBookings.paid')}
                       </span>
                       <span className="font-bold text-emerald-600">{b.totalPaid || '₹50.00'}</span>
                     </div>
@@ -223,7 +225,7 @@ export default function MyBookingsPage({ onOpenAuth, currentUser }) {
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 text-xs font-bold transition-colors cursor-pointer"
                     >
                       <QrCode className="w-3.5 h-3.5" />
-                      <span>View QR Pass</span>
+                      <span>{t('myBookings.viewPass')}</span>
                     </button>
 
                     {!isCancelled && !isCompleted && (
@@ -231,7 +233,7 @@ export default function MyBookingsPage({ onOpenAuth, currentUser }) {
                         onClick={() => setCancelModalBooking(b)}
                         className="text-xs font-semibold text-rose-600 hover:text-rose-800 hover:underline cursor-pointer"
                       >
-                        Cancel Booking
+                        {t('myBookings.cancelBooking')}
                       </button>
                     )}
                   </div>
@@ -249,11 +251,11 @@ export default function MyBookingsPage({ onOpenAuth, currentUser }) {
           <div className="bg-white rounded-3xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl border border-slate-100 animate-in fade-in">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-sky-700 tracking-wider uppercase">
-                Digital Entry Pass
+                {t('myBookings.digitalPassModal')}
               </span>
               <button
                 onClick={() => setSelectedPass(null)}
-                className="w-7 h-7 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-slate-200"
+                className="w-7 h-7 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-slate-200 cursor-pointer"
               >
                 ✕
               </button>
@@ -261,19 +263,19 @@ export default function MyBookingsPage({ onOpenAuth, currentUser }) {
 
             <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left space-y-2">
               <div className="flex justify-between items-baseline">
-                <span className="text-xs text-slate-500">Facility:</span>
+                <span className="text-xs text-slate-500">{t('myBookings.facility')}</span>
                 <span className="text-xs font-bold text-slate-900">{selectedPass.parkingName}</span>
               </div>
               <div className="flex justify-between items-baseline">
-                <span className="text-xs text-slate-500">Stall:</span>
+                <span className="text-xs text-slate-500">{t('myBookings.stall')}</span>
                 <span className="text-xs font-extrabold text-sky-700">{selectedPass.bayNumber}</span>
               </div>
               <div className="flex justify-between items-baseline">
-                <span className="text-xs text-slate-500">Vehicle:</span>
+                <span className="text-xs text-slate-500">{t('myBookings.vehicle')}</span>
                 <span className="text-xs font-semibold text-slate-800 uppercase">{selectedPass.vehiclePlate}</span>
               </div>
               <div className="flex justify-between items-baseline">
-                <span className="text-xs text-slate-500">Pass Code:</span>
+                <span className="text-xs text-slate-500">{t('myBookings.passCode')}</span>
                 <span className="text-xs font-mono font-bold text-slate-800">{selectedPass.reference}</span>
               </div>
             </div>
@@ -287,7 +289,7 @@ export default function MyBookingsPage({ onOpenAuth, currentUser }) {
                 )}
               </div>
               <span className="text-[10px] text-slate-400 font-mono mt-2">
-                SCAN AT ENTRY / EXIT BARRIER
+                {t('myBookings.scanBarrier')}
               </span>
             </div>
 
@@ -296,10 +298,10 @@ export default function MyBookingsPage({ onOpenAuth, currentUser }) {
                 alert(`Pass ${selectedPass.reference} saved.`);
                 setSelectedPass(null);
               }}
-              className="w-full py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 flex items-center justify-center gap-1.5"
+              className="w-full py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>Download Offline Pass</span>
+              <span>{t('myBookings.downloadPass')}</span>
             </button>
           </div>
         </div>
@@ -313,24 +315,27 @@ export default function MyBookingsPage({ onOpenAuth, currentUser }) {
               <AlertCircle className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900">Cancel Reservation?</h3>
+              <h3 className="text-base font-bold text-slate-900">{t('myBookings.cancelModalTitle')}</h3>
               <p className="text-xs text-slate-500 mt-1">
-                Are you sure you want to cancel pass <b>{cancelModalBooking.reference}</b> at {cancelModalBooking.parkingName}? This will free up your reserved bay.
+                {t('myBookings.cancelModalDesc', {
+                  ref: cancelModalBooking.reference,
+                  parking: cancelModalBooking.parkingName
+                })}
               </p>
             </div>
             <div className="grid grid-cols-2 gap-2 pt-2">
               <button
                 onClick={() => setCancelModalBooking(null)}
-                className="py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                className="py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer"
               >
-                Keep Pass
+                {t('myBookings.keepPass')}
               </button>
               <button
                 onClick={handleCancelConfirm}
                 disabled={isCancelling}
-                className="py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-xs"
+                className="py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-xs cursor-pointer"
               >
-                {isCancelling ? 'Cancelling...' : 'Yes, Cancel'}
+                {isCancelling ? t('myBookings.cancelling') : t('myBookings.yesCancel')}
               </button>
             </div>
           </div>

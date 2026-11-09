@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, ArrowUp } from 'lucide-react';
 import Logo from './Logo';
+import { useLanguage } from '../context/LanguageContext';
 
 // Clean SVG Social Icons
 const TwitterIcon = () => (
@@ -30,6 +31,7 @@ const LinkedinIcon = () => (
 );
 
 export default function Footer({ onOpenAuth, onOpenListParking, onRequestAssistance }) {
+  const { t } = useLanguage();
   const [legalModal, setLegalModal] = useState(null); // 'privacy' | 'terms' | null
 
   const scrollToTop = () => {
@@ -48,7 +50,7 @@ export default function Footer({ onOpenAuth, onOpenListParking, onRequestAssista
             <Logo variant="dark" size="default" />
             
             <p className="text-xs sm:text-sm text-slate-400 max-w-sm leading-relaxed mt-2">
-              ParkEase — Smart Parking &amp; Vehicle Assistance Platform. Helping drivers discover secure, affordable parking spots and immediate 24/7 roadside mechanical support.
+              {t('footer.tagline')}
             </p>
 
             <div className="flex items-center gap-3 pt-2">
@@ -94,20 +96,20 @@ export default function Footer({ onOpenAuth, onOpenListParking, onRequestAssista
           {/* Column 2: Quick Navigation Links (lg:col-span-2) */}
           <div className="lg:col-span-2 space-y-3">
             <h4 className="text-xs font-bold text-white uppercase tracking-wider">
-              Quick Navigation
+              {t('footer.quickLinks')}
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <a href="#home" className="hover:text-sky-400 transition-colors">Home</a>
+                <a href="#home" className="hover:text-sky-400 transition-colors">{t('footer.home')}</a>
               </li>
               <li>
-                <a href="#find-parking" className="hover:text-sky-400 transition-colors">Find Nearby Parking</a>
+                <a href="#find-parking" className="hover:text-sky-400 transition-colors">{t('footer.findParking')}</a>
               </li>
               <li>
-                <a href="#how-it-works" className="hover:text-sky-400 transition-colors">How It Works</a>
+                <a href="#how-it-works" className="hover:text-sky-400 transition-colors">{t('footer.howItWorks')}</a>
               </li>
               <li>
-                <a href="#promotions" className="hover:text-sky-400 transition-colors">Sponsored Promotions</a>
+                <a href="#promotions" className="hover:text-sky-400 transition-colors">{t('footer.promotions')}</a>
               </li>
               <li>
                 <button
@@ -115,7 +117,7 @@ export default function Footer({ onOpenAuth, onOpenListParking, onRequestAssista
                   onClick={onOpenListParking}
                   className="hover:text-sky-400 transition-colors text-left"
                 >
-                  List Your Space (Hosts)
+                  {t('footer.listSpace')}
                 </button>
               </li>
               <li>
@@ -124,7 +126,7 @@ export default function Footer({ onOpenAuth, onOpenListParking, onRequestAssista
                   onClick={() => onOpenAuth('login')}
                   className="hover:text-sky-400 transition-colors text-left"
                 >
-                  Driver Account Login
+                  {t('footer.driverLogin')}
                 </button>
               </li>
             </ul>
@@ -133,23 +135,23 @@ export default function Footer({ onOpenAuth, onOpenListParking, onRequestAssista
           {/* Column 3: Vehicle Assistance Links (lg:col-span-3) */}
           <div className="lg:col-span-3 space-y-3">
             <h4 className="text-xs font-bold text-white uppercase tracking-wider">
-              Vehicle Assistance
+              {t('footer.assistanceTitle')}
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <a href="#vehicle-assistance" className="hover:text-sky-400 transition-colors">Mechanics &amp; Repairs</a>
+                <a href="#vehicle-assistance" className="hover:text-sky-400 transition-colors">{t('footer.mechanics')}</a>
               </li>
               <li>
-                <a href="#vehicle-assistance" className="hover:text-sky-400 transition-colors">Flat Tire &amp; Puncture Repair</a>
+                <a href="#vehicle-assistance" className="hover:text-sky-400 transition-colors">{t('footer.puncture')}</a>
               </li>
               <li>
-                <a href="#vehicle-assistance" className="hover:text-sky-400 transition-colors">24/7 Flatbed Towing Service</a>
+                <a href="#vehicle-assistance" className="hover:text-sky-400 transition-colors">{t('footer.towing')}</a>
               </li>
               <li>
-                <a href="#vehicle-assistance" className="hover:text-sky-400 transition-colors">Emergency Battery Jump-Start</a>
+                <a href="#vehicle-assistance" className="hover:text-sky-400 transition-colors">{t('footer.battery')}</a>
               </li>
               <li>
-                <a href="#vehicle-assistance" className="hover:text-sky-400 transition-colors">Scheduled Vehicle Servicing</a>
+                <a href="#vehicle-assistance" className="hover:text-sky-400 transition-colors">{t('footer.servicing')}</a>
               </li>
               <li>
                 <button
@@ -157,7 +159,7 @@ export default function Footer({ onOpenAuth, onOpenListParking, onRequestAssista
                   onClick={onRequestAssistance}
                   className="inline-block mt-1 px-2.5 py-1 rounded-lg bg-rose-950/70 hover:bg-rose-900 text-rose-300 font-bold text-[10px] border border-rose-800 transition-colors cursor-pointer"
                 >
-                  SOS Hotline: 1800-PARK-HELP
+                  {t('footer.sosHotline')}
                 </button>
               </li>
             </ul>
@@ -166,20 +168,20 @@ export default function Footer({ onOpenAuth, onOpenListParking, onRequestAssista
           {/* Column 4: Contact Information (lg:col-span-3) */}
           <div className="lg:col-span-3 space-y-3">
             <h4 className="text-xs font-bold text-white uppercase tracking-wider">
-              Contact &amp; Support
+              {t('footer.contactTitle')}
             </h4>
             <div className="space-y-2.5 text-xs text-slate-400">
               <div className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                <span>ParkEase Mobility Tower, 452 Grand Boulevard, Tech District</span>
+                <span>{t('footer.address')}</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-sky-400 shrink-0" />
-                <span>+1 (800) 727-5327 (Toll-Free)</span>
+                <span>{t('footer.tollFree')}</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-sky-400 shrink-0" />
-                <span>support@parkease-platform.com</span>
+                <span>{t('footer.email')}</span>
               </div>
             </div>
 
@@ -187,10 +189,10 @@ export default function Footer({ onOpenAuth, onOpenListParking, onRequestAssista
               <button
                 type="button"
                 onClick={scrollToTop}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-800 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-800 transition-colors cursor-pointer"
               >
                 <ArrowUp className="w-3.5 h-3.5" />
-                <span>Back to Top</span>
+                <span>{t('footer.backToTop')}</span>
               </button>
             </div>
           </div>
@@ -200,7 +202,7 @@ export default function Footer({ onOpenAuth, onOpenListParking, onRequestAssista
         {/* Bottom Bar: Copyright, Terms & Privacy Links */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div>
-            &copy; 2026 ParkEase Technologies Inc. All rights reserved.
+            {t('footer.rights')}
           </div>
 
           <div className="flex items-center gap-6">
@@ -209,7 +211,7 @@ export default function Footer({ onOpenAuth, onOpenListParking, onRequestAssista
               onClick={() => setLegalModal('privacy')}
               className="hover:text-slate-300 transition-colors cursor-pointer"
             >
-              Privacy Policy
+              {t('footer.privacy')}
             </button>
             <span>•</span>
             <button
@@ -217,10 +219,10 @@ export default function Footer({ onOpenAuth, onOpenListParking, onRequestAssista
               onClick={() => setLegalModal('terms')}
               className="hover:text-slate-300 transition-colors cursor-pointer"
             >
-              Terms of Service
+              {t('footer.terms')}
             </button>
             <span>•</span>
-            <span className="text-slate-600">Sample Prototype</span>
+            <span className="text-slate-600">{t('footer.samplePrototype')}</span>
           </div>
         </div>
 
@@ -236,7 +238,7 @@ export default function Footer({ onOpenAuth, onOpenListParking, onRequestAssista
               </h4>
               <button
                 onClick={() => setLegalModal(null)}
-                className="text-slate-400 hover:text-white"
+                className="text-slate-400 hover:text-white cursor-pointer"
               >
                 ✕
               </button>
@@ -255,7 +257,7 @@ export default function Footer({ onOpenAuth, onOpenListParking, onRequestAssista
             <button
               type="button"
               onClick={() => setLegalModal(null)}
-              className="w-full py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-colors"
+              className="w-full py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-colors cursor-pointer"
             >
               I Understand &amp; Close
             </button>

@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, PlusCircle, User, LogOut, Ticket } from 'lucide-react';
 import Logo from './Logo';
+import { useLanguage } from '../context/LanguageContext';
+import LanguageToggle from './LanguageToggle';
 
 export default function Navbar({ onOpenAuth, onOpenListParking, currentUser, onSignOut }) {
+  const { t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -16,12 +19,12 @@ export default function Navbar({ onOpenAuth, onOpenListParking, currentUser, onS
   }, []);
 
   const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'Find Parking', href: '#find-parking' },
-    { name: 'Vehicle Assistance', href: '#vehicle-assistance' },
-    { name: 'Promotions', href: '#promotions' },
-    { name: 'How It Works', href: '#how-it-works' },
-    { name: 'Why ParkEase', href: '#why-choose-us' },
+    { name: t('nav.home'), href: '#home' },
+    { name: t('nav.findParking'), href: '#find-parking' },
+    { name: t('nav.vehicleAssistance'), href: '#vehicle-assistance' },
+    { name: t('nav.promotions'), href: '#promotions' },
+    { name: t('nav.howItWorks'), href: '#how-it-works' },
+    { name: t('nav.whyParkease'), href: '#why-choose-us' },
   ];
 
   const handleNavClick = (e, href) => {
@@ -77,13 +80,16 @@ export default function Navbar({ onOpenAuth, onOpenListParking, currentUser, onS
 
           {/* Right Action Buttons */}
           <div className="hidden md:flex items-center gap-3">
+            {/* Language Toggle Button */}
+            <LanguageToggle />
+
             {/* My Bookings CTA */}
             <Link
               to="/my-bookings"
               className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-sky-700 bg-sky-50 hover:bg-sky-100 rounded-xl transition-all border border-sky-200/80 cursor-pointer"
             >
               <Ticket className="w-3.5 h-3.5 text-sky-600" />
-              <span>My Bookings</span>
+              <span>{t('nav.myBookings')}</span>
             </Link>
 
             {/* List Your Parking CTA */}
@@ -92,7 +98,7 @@ export default function Navbar({ onOpenAuth, onOpenListParking, currentUser, onS
               className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all border border-slate-200/70 cursor-pointer"
             >
               <PlusCircle className="w-4 h-4 text-sky-600" />
-              <span>List Your Parking</span>
+              <span>{t('nav.listParking')}</span>
             </button>
 
             {currentUser ? (
@@ -109,7 +115,7 @@ export default function Navbar({ onOpenAuth, onOpenListParking, currentUser, onS
                 </div>
                 <button
                   onClick={onSignOut}
-                  title="Sign Out"
+                  title={t('nav.signOut')}
                   className="p-2 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
@@ -122,23 +128,24 @@ export default function Navbar({ onOpenAuth, onOpenListParking, currentUser, onS
                   onClick={() => onOpenAuth('login')}
                   className="px-3.5 py-2 text-xs font-bold text-slate-700 hover:text-sky-600 transition-colors cursor-pointer"
                 >
-                  Login
+                  {t('nav.login')}
                 </button>
                 <button
                   onClick={() => onOpenAuth('register')}
                   className="px-4 py-2 text-xs font-bold text-white bg-sky-600 hover:bg-sky-500 rounded-xl shadow-sm hover:shadow transition-all cursor-pointer"
                 >
-                  Register
+                  {t('nav.register')}
                 </button>
               </div>
             )}
           </div>
 
-          {/* Mobile Hamburger Button */}
-          <div className="flex items-center gap-2 lg:hidden">
+          {/* Mobile Actions: Language Toggle & Menu Button */}
+          <div className="flex items-center gap-1.5 lg:hidden">
+            <LanguageToggle variant="compact" />
             <button
               onClick={() => onOpenAuth(currentUser ? 'profile' : 'login')}
-              className="md:hidden p-2 text-slate-600 hover:text-sky-600"
+              className="p-2 text-slate-600 hover:text-sky-600"
               aria-label="User account"
             >
               <User className="w-5 h-5" />
@@ -177,7 +184,7 @@ export default function Navbar({ onOpenAuth, onOpenListParking, currentUser, onS
               className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-xs bg-sky-50 text-sky-700 border border-sky-200"
             >
               <Ticket className="w-4 h-4 text-sky-600" />
-              <span>My Passes &amp; Reservations</span>
+              <span>{t('nav.myBookings')}</span>
             </Link>
 
             <button
@@ -188,7 +195,7 @@ export default function Navbar({ onOpenAuth, onOpenListParking, currentUser, onS
               className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm bg-slate-900 text-white shadow-sm"
             >
               <PlusCircle className="w-4 h-4 text-sky-400" />
-              <span>List Your Parking</span>
+              <span>{t('nav.listParking')}</span>
             </button>
 
             {currentUser ? (
@@ -204,7 +211,7 @@ export default function Navbar({ onOpenAuth, onOpenListParking, currentUser, onS
                   }}
                   className="text-xs font-semibold text-rose-600 hover:underline"
                 >
-                  Sign Out
+                  {t('nav.signOut')}
                 </button>
               </div>
             ) : (
@@ -216,7 +223,7 @@ export default function Navbar({ onOpenAuth, onOpenListParking, currentUser, onS
                   }}
                   className="py-2.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-50"
                 >
-                  Login
+                  {t('nav.login')}
                 </button>
                 <button
                   onClick={() => {
@@ -225,7 +232,7 @@ export default function Navbar({ onOpenAuth, onOpenListParking, currentUser, onS
                   }}
                   className="py-2.5 rounded-xl bg-sky-600 text-white text-xs font-bold hover:bg-sky-500 shadow-sm"
                 >
-                  Register
+                  {t('nav.register')}
                 </button>
               </div>
             )}

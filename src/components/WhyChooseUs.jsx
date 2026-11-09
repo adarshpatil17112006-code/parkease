@@ -1,13 +1,32 @@
 import React from 'react';
 import { Smartphone, Compass, Clock, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { platformBenefits } from '../data/mockData';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function WhyChooseUs() {
+  const { t } = useLanguage();
+
   const iconMap = {
     Smartphone: Smartphone,
     Compass: Compass,
     Clock: Clock,
     Shield: ShieldCheck
+  };
+
+  const getBenefitTitle = (id, defaultTitle) => {
+    if (id === 'benefit-1') return t('whyUs.benefit1Title');
+    if (id === 'benefit-2') return t('whyUs.benefit2Title');
+    if (id === 'benefit-3') return t('whyUs.benefit3Title');
+    if (id === 'benefit-4') return t('whyUs.benefit4Title');
+    return defaultTitle;
+  };
+
+  const getBenefitDesc = (id, defaultDesc) => {
+    if (id === 'benefit-1') return t('whyUs.benefit1Desc');
+    if (id === 'benefit-2') return t('whyUs.benefit2Desc');
+    if (id === 'benefit-3') return t('whyUs.benefit3Desc');
+    if (id === 'benefit-4') return t('whyUs.benefit4Desc');
+    return defaultDesc;
   };
 
   return (
@@ -17,13 +36,13 @@ export default function WhyChooseUs() {
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-14">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 border border-sky-100 text-sky-800 text-xs font-bold mb-3">
-            <span>The Smarter Commute</span>
+            <span>{t('whyUs.badge')}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Why Choose ParkEase
+            {t('whyUs.title')}
           </h2>
           <p className="text-slate-600 text-sm sm:text-base mt-2">
-            Engineered to remove friction from every trip, offering drivers peace of mind whether parking for minutes or hours.
+            {t('whyUs.subtitle')}
           </p>
         </div>
 
@@ -44,19 +63,19 @@ export default function WhyChooseUs() {
 
                   {/* Title */}
                   <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-sky-700 transition-colors">
-                    {item.title}
+                    {getBenefitTitle(item.id, item.title)}
                   </h3>
 
                   {/* Description */}
                   <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    {item.desc}
+                    {getBenefitDesc(item.id, item.desc)}
                   </p>
                 </div>
 
                 {/* Sub-check note */}
                 <div className="mt-6 pt-4 border-t border-slate-100 flex items-center gap-1.5 text-xs text-slate-500 font-semibold">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                  <span>Available on iOS, Android &amp; Web</span>
+                  <span>{t('whyUs.availablePlatforms')}</span>
                 </div>
               </div>
             );

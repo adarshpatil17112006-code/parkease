@@ -1,7 +1,9 @@
 import React from 'react';
 import { CheckCircle2, Navigation, Zap, Shield, Clock } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function HeroIllustration() {
+  const { t } = useLanguage();
   return (
     <div className="relative w-full max-w-xl mx-auto lg:max-w-none flex items-center justify-center p-2 sm:p-4">
       {/* Soft background glow circles (minimal, no excessive glow) */}
@@ -193,36 +195,36 @@ export default function HeroIllustration() {
         </div>
       </div>
 
-      {/* Floating Card 1: Easy Booking (Top-Left / Top-Right depending on screen) */}
+      {/* Floating Card 1: Easy Booking */}
       <div className="absolute -top-3 -left-3 sm:-left-6 bg-white rounded-2xl p-3 shadow-lg border border-sky-100 flex items-center gap-3 animate-fade-in hover:scale-105 transition-transform duration-200">
         <div className="w-10 h-10 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-600 shrink-0">
           <CheckCircle2 className="w-5 h-5" />
         </div>
         <div>
-          <div className="text-xs font-bold text-slate-900">Easy Booking</div>
-          <div className="text-[11px] text-slate-500">Instant QR Access & Pass</div>
+          <div className="text-xs font-bold text-slate-900">{t('hero.easyBooking')}</div>
+          <div className="text-[11px] text-slate-500">{t('hero.easyBookingDesc')}</div>
         </div>
       </div>
 
-      {/* Floating Card 2: Nearby Parking (Bottom-Left) */}
+      {/* Floating Card 2: Nearby Parking */}
       <div className="absolute -bottom-4 -left-2 sm:left-2 bg-white rounded-2xl p-3 shadow-lg border border-sky-100 flex items-center gap-3 hover:scale-105 transition-transform duration-200">
         <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 shrink-0">
           <Navigation className="w-5 h-5" />
         </div>
         <div>
-          <div className="text-xs font-bold text-slate-900">Nearby Parking</div>
-          <div className="text-[11px] text-slate-500">Spaces within 0.3 miles</div>
+          <div className="text-xs font-bold text-slate-900">{t('hero.nearbyParking')}</div>
+          <div className="text-[11px] text-slate-500">{t('hero.nearbyParkingDesc')}</div>
         </div>
       </div>
 
-      {/* Floating Card 3: Quick Access (Bottom-Right) */}
+      {/* Floating Card 3: Quick Access */}
       <div className="absolute -bottom-3 -right-2 sm:-right-4 bg-white rounded-2xl p-3 shadow-lg border border-sky-100 flex items-center gap-3 hover:scale-105 transition-transform duration-200">
         <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shrink-0">
           <Zap className="w-5 h-5" />
         </div>
         <div>
-          <div className="text-xs font-bold text-slate-900">Quick Access</div>
-          <div className="text-[11px] text-slate-500">Automated gate entry</div>
+          <div className="text-xs font-bold text-slate-900">{t('hero.quickAccess')}</div>
+          <div className="text-[11px] text-slate-500">{t('hero.quickAccessDesc')}</div>
         </div>
       </div>
 

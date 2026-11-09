@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Tag, MapPin, ExternalLink, Star, Sparkles, X } from 'lucide-react';
 import { sponsoredPromotions } from '../data/mockData';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Promotions() {
+  const { t } = useLanguage();
   const [activePromoModal, setActivePromoModal] = useState(null);
 
   return (
@@ -14,18 +16,18 @@ export default function Promotions() {
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-bold mb-3">
               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              <span>Partner Perks &amp; Discounts</span>
+              <span>{t('promotions.badge')}</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-              Offers That Keep You Moving.
+              {t('promotions.title')}
             </h2>
             <p className="text-slate-600 text-sm sm:text-base mt-2 max-w-xl">
-              Take advantage of hand-picked deals from accredited driving schools, service hubs, insurers, and EV networks.
+              {t('promotions.subtitle')}
             </p>
           </div>
 
           <div className="text-xs text-slate-400">
-            <span>Special promo codes automatically applied at checkout</span>
+            <span>{t('promotions.autoApplied')}</span>
           </div>
         </div>
 
@@ -49,7 +51,7 @@ export default function Promotions() {
                   {/* Mandatory Sponsored Badge */}
                   <div className="absolute top-2.5 left-2.5">
                     <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-slate-900/80 text-amber-300 backdrop-blur-xs border border-amber-400/30 shadow-xs">
-                      Sponsored
+                      {t('promotions.sponsored')}
                     </span>
                   </div>
 
@@ -105,7 +107,7 @@ export default function Promotions() {
                   onClick={() => setActivePromoModal(promo)}
                   className="w-full py-2.5 px-3 rounded-xl border border-slate-200 hover:border-slate-800 hover:bg-slate-900 hover:text-white text-slate-800 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                 >
-                  <span>Learn More</span>
+                  <span>{t('promotions.learnMore')}</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -120,7 +122,7 @@ export default function Promotions() {
               <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
                 <div className="flex items-center gap-2">
                   <span className="px-2 py-0.5 text-[10px] font-black uppercase bg-amber-100 text-amber-800 rounded">
-                    Sponsored Offer
+                    {t('promotions.sponsoredOffer')}
                   </span>
                   <span className="text-xs text-slate-500">{activePromoModal.category}</span>
                 </div>
@@ -151,18 +153,18 @@ export default function Promotions() {
                   type="button"
                   onClick={() => {
                     navigator.clipboard?.writeText('PARKEASE2026');
-                    alert('Promo code "PARKEASE2026" copied to clipboard!');
+                    alert(t('promotions.codeCopied'));
                   }}
                   className="py-2.5 px-3 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 hover:bg-slate-50"
                 >
-                  Copy Promo Code
+                  {t('promotions.copyPromo')}
                 </button>
                 <button
                   type="button"
                   onClick={() => setActivePromoModal(null)}
                   className="py-2.5 px-3 rounded-xl bg-slate-900 text-xs font-bold text-white hover:bg-slate-800"
                 >
-                  Close Offer
+                  {t('promotions.closeOffer')}
                 </button>
               </div>
             </div>
